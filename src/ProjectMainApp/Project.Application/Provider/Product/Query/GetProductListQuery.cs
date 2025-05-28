@@ -27,7 +27,7 @@ namespace Project.Application.Provider.Product.Query
             // Apply filters
             if (!string.IsNullOrWhiteSpace(request.SearchText))
             {
-                query = query.Where(p => p.Name.Contains(request.SearchText) || 
+                query = query.Where(p => p.Name.Contains(request.SearchText) ||
                                         p.Description.Contains(request.SearchText) ||
                                         p.Slug.Contains(request.SearchText));
             }
@@ -58,7 +58,7 @@ namespace Project.Application.Provider.Product.Query
             var products = await query
                 .Skip((int)((request.Page - 1) * request.PageSize))
                 .Take((int)request.PageSize)
-                .Select(p => new ProductEntity
+                .Select(p => new ProductResponseModel // Map ProductEntity to ProductResponseModel
                 {
                     Id = p.Id,
                     Name = p.Name,
@@ -72,7 +72,7 @@ namespace Project.Application.Provider.Product.Query
                 })
                 .ToListAsync();
 
-            response.Products = products;
+            response.Products = products; // Assign the correctly mapped list
             return response;
         }
     }
