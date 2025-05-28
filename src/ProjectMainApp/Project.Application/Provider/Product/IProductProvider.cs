@@ -1,0 +1,15 @@
+﻿using Project.Object.Requests;
+using Project.Object.Responses;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Project.Application.Provider.Cart
+{
+    public interface IProductProvider
+    {
+        public Task<ProductResponseModel> AddProduct(ProductRequestModel product);
+    }
+}
