@@ -2,7 +2,7 @@
 
 namespace Project.Object
 {
-    public class PaginationModelBase : SearchFilterModelBase
+    public class PaginationModelBase 
     {
         [Range(1, int.MaxValue)]
         public int? Page { get; set; }
@@ -14,6 +14,4 @@ namespace Project.Object
     {
         public bool? IsCountCalled { get; set; }
     }
-
-
 }

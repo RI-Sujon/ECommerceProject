@@ -62,8 +62,8 @@ namespace Project.Endpoint.Controllers
             }
         }
 
-        [HttpGet("get-product-list")]
-        public async Task<ActionResult<GetProductListResponse>> GetProductList([FromQuery] GetProductListRequest request)
+        [HttpPost("get-product-list")]
+        public async Task<ActionResult<GetProductListResponse>> GetProductList(GetProductListRequest request)
         {
             try
             {

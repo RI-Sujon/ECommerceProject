@@ -1,3 +1,0 @@
-C:\Users\RI Sujon\Documents\ECommerceProject\src\ProjectMainApp\Project.Data\obj\Debug\net9.0\staticwebassets.build.json
-C:\Users\RI Sujon\Documents\ECommerceProject\src\ProjectMainApp\Project.Data\obj\Debug\net9.0\staticwebassets.build.json
-C:\Users\RI Sujon\Documents\ECommerceProject\src\ProjectMainApp\Project.Data\obj\Debug\net9.0\staticwebassets.build.json
