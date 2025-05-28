@@ -4,6 +4,7 @@ using Project.Core;
 using Project.Core.Caching;
 using Project.Core.Log;
 using Microsoft.EntityFrameworkCore;
+using Boooks.Net.Endpoint.ActionFilters;
 
 var builder = WebApplication.CreateBuilder(args); 
 
@@ -16,7 +17,10 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.OperationFilter<AddRequiredHeaderParameter>();
+});
 
 var app = builder.Build();
 
