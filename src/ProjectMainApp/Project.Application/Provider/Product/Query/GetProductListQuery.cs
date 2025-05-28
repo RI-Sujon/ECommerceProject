@@ -28,12 +28,8 @@ namespace Project.Application.Provider.Product.Query
             if (!string.IsNullOrWhiteSpace(request.SearchText))
             {
                 query = query.Where(p => p.Name.Contains(request.SearchText) || 
-                                        p.Description.Contains(request.SearchText));
-            }
-
-            if (request.CategoryId.HasValue)
-            {
-                query = query.Where(p => p.CategoryId == request.CategoryId.Value);
+                                        p.Description.Contains(request.SearchText) ||
+                                        p.Slug.Contains(request.SearchText));
             }
 
             if (request.MinPrice.HasValue)
@@ -62,16 +58,17 @@ namespace Project.Application.Provider.Product.Query
             var products = await query
                 .Skip((int)((request.Page - 1) * request.PageSize))
                 .Take((int)request.PageSize)
-                .Select(p => new Product
+                .Select(p => new ProductEntity
                 {
                     Id = p.Id,
                     Name = p.Name,
                     Description = p.Description,
+                    Slug = p.Slug,
                     Price = p.Price,
-                    CategoryId = p.CategoryId,
+                    Stock = p.Stock,
                     IsActive = p.IsActive,
-                    CreatedAt = p.CreatedAt,
-                    UpdatedAt = p.UpdatedAt
+                    DiscountStartDate = p.DiscountStartDate,
+                    DiscountEndDate = p.DiscountEndDate
                 })
                 .ToListAsync();
 

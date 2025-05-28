@@ -1,5 +1,6 @@
-using Project.Object.Entities;
 using Microsoft.EntityFrameworkCore;
+using Project.Object.Entities;
+using Project.Object.Responses;
 
 public class AppDbContext : DbContext
 {
@@ -12,12 +13,12 @@ public class AppDbContext : DbContext
         base.OnModelCreating(builder);
 
         // Configure Product entity
-        builder.Entity<Product>(entity =>
+        builder.Entity<ProductEntity>(entity =>
         {
             entity.HasKey(e => e.Id);
         });
     }
 
     // You can add other DbSets here
-    public DbSet<Product> Products { get; set; }
+    public DbSet<ProductEntity> Products { get; set; }
 }

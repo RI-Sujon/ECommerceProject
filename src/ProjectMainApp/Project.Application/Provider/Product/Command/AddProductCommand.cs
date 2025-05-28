@@ -1,4 +1,3 @@
-
 using System.Data;
 using Project.Core;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,13 +20,17 @@ public class AddProductCommand
     public async Task<ProductResponseModel> AddProduct(ProductRequestModel product)
     {
         _applicationContext.Log.LogInformation("Going to execute - AddProductCommand");
-
-        var addProduct = new Product()
+        
+        var addProduct = new ProductEntity()
         {
             Name = product.Name,
             Description = product.Description,
+            Slug = product.Slug,
             Price = product.Price,
-            Stock = product.Stock
+            Stock = product.Stock,
+            IsActive = product.IsActive,
+            DiscountStartDate = product.DiscountStartDate,
+            DiscountEndDate = product.DiscountEndDate
         };
 
         _dbContext.Products.Add(addProduct);
@@ -38,8 +41,12 @@ public class AddProductCommand
             Id = addProduct.Id,
             Name = addProduct.Name,
             Description = addProduct.Description,
+            Slug = addProduct.Slug,
             Price = addProduct.Price,
-            Stock = addProduct.Stock
+            Stock = addProduct.Stock,
+            IsActive = addProduct.IsActive,
+            DiscountStartDate = addProduct.DiscountStartDate,
+            DiscountEndDate = addProduct.DiscountEndDate
         };
     }
 }
