@@ -6,10 +6,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project.Application.Provider.Cart
+namespace Project.Application.Provider.Product
 {
     public interface IProductProvider
     {
         public Task<ProductResponseModel> AddProduct(ProductRequestModel product);
+        public Task<GetProductListResponse> GetProductList(GetProductListRequest request);
     }
 }

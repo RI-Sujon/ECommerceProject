@@ -1,15 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Project.Application.Data.Command;
+using Project.Application.Provider.Product.Command;
+using Project.Application.Provider.Product.Query;
 using Project.Core;
 using Project.Object.Requests;
 using Project.Object.Responses;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Project.Application.Provider.Cart
+namespace Project.Application.Provider.Product
 {
     public class ProductProvider : IProductProvider
     {
@@ -31,6 +27,16 @@ namespace Project.Application.Provider.Cart
             _applicationContext.Log.LogInformation($"Completed addProductCommand.AddProduct({product.Name})");
 
             return result;
+        }
+
+        public async Task<GetProductListResponse> GetProductList(GetProductListRequest request)
+        {
+            var getProductListQuery = _serviceProvider.GetRequiredService<GetProductListQuery>();
+
+            _applicationContext.Log.LogInformation("Going to execute GetProductList in provider");
+            var response = await getProductListQuery.GetProductList(request);
+            _applicationContext.Log.LogInformation("Completed GetProductList in provider");
+            return response;
         }
     }
 }

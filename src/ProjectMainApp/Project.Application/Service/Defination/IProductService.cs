@@ -11,5 +11,6 @@ namespace Project.Application.Service.Defination
     public interface IProductService
     {
         public Task<ProductResponseModel> AddProduct(ProductRequestModel product);
+        public Task<GetProductListResponse> GetProductList(GetProductListRequest request);
     }
 }

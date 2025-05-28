@@ -1,9 +1,9 @@
-using Project.Application.Provider;
+using Project.Application.Provider.Product;
 using Project.Application.Service;
 using Microsoft.Extensions.DependencyInjection;
 using Project.Application.Service.Defination;
-using Project.Application.Provider.Cart;
-using Project.Application.Data.Command;
+using Project.Application.Provider.Product.Command;
+using Project.Application.Provider.Product.Query;
 
 namespace Project.Application.Extensions;
 
@@ -19,6 +19,7 @@ public static class ManagersDependencyGroup
 
         //Data Command
         services.AddTransient<AddProductCommand>();
+        services.AddTransient<GetProductListQuery>();
         
         //Data Query
         

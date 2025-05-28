@@ -6,7 +6,7 @@ using Project.Object.Responses;
 using Project.Object.Requests;
 using Project.Object.Entities;
 
-namespace Project.Application.Data.Command;
+namespace Project.Application.Provider.Product.Command;
 
 public class AddProductCommand 
 {

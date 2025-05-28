@@ -8,9 +8,15 @@ C:\Users\RI Sujon\Documents\ECommerceProject\src\ProjectMainApp\Project.Test\bin
 C:\Users\RI Sujon\Documents\ECommerceProject\src\ProjectMainApp\Project.Test\bin\Debug\net8.0\Project.Test.dll
 C:\Users\RI Sujon\Documents\ECommerceProject\src\ProjectMainApp\Project.Test\bin\Debug\net8.0\Project.Test.pdb
 C:\Users\RI Sujon\Documents\ECommerceProject\src\ProjectMainApp\Project.Test\bin\Debug\net8.0\Microsoft.VisualStudio.CodeCoverage.Shim.dll
+C:\Users\RI Sujon\Documents\ECommerceProject\src\ProjectMainApp\Project.Test\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.dll
+C:\Users\RI Sujon\Documents\ECommerceProject\src\ProjectMainApp\Project.Test\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+C:\Users\RI Sujon\Documents\ECommerceProject\src\ProjectMainApp\Project.Test\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.Relational.dll
 C:\Users\RI Sujon\Documents\ECommerceProject\src\ProjectMainApp\Project.Test\bin\Debug\net8.0\Microsoft.Extensions.Caching.Abstractions.dll
 C:\Users\RI Sujon\Documents\ECommerceProject\src\ProjectMainApp\Project.Test\bin\Debug\net8.0\Microsoft.Extensions.Caching.Memory.dll
+C:\Users\RI Sujon\Documents\ECommerceProject\src\ProjectMainApp\Project.Test\bin\Debug\net8.0\Microsoft.Extensions.Configuration.Abstractions.dll
+C:\Users\RI Sujon\Documents\ECommerceProject\src\ProjectMainApp\Project.Test\bin\Debug\net8.0\Microsoft.Extensions.DependencyInjection.dll
 C:\Users\RI Sujon\Documents\ECommerceProject\src\ProjectMainApp\Project.Test\bin\Debug\net8.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\Users\RI Sujon\Documents\ECommerceProject\src\ProjectMainApp\Project.Test\bin\Debug\net8.0\Microsoft.Extensions.Logging.dll
 C:\Users\RI Sujon\Documents\ECommerceProject\src\ProjectMainApp\Project.Test\bin\Debug\net8.0\Microsoft.Extensions.Logging.Abstractions.dll
 C:\Users\RI Sujon\Documents\ECommerceProject\src\ProjectMainApp\Project.Test\bin\Debug\net8.0\Microsoft.Extensions.Options.dll
 C:\Users\RI Sujon\Documents\ECommerceProject\src\ProjectMainApp\Project.Test\bin\Debug\net8.0\Microsoft.Extensions.Primitives.dll
