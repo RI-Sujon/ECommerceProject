@@ -17,4 +17,11 @@
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="9.0.5" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+    <Folder Include="Views\" />
+    <Folder Include="wwwroot\css\fonts\" />
+    <Folder Include="wwwroot\js\Services\" />
+  </ItemGroup>
+
 </Project>

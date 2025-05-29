@@ -11,7 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddManagersDependencyGroup();
 builder.Services.AddScoped<IApplicationContext, ApplicationContext>();
 builder.Services.AddScoped<ICacheProvider, InMemoryCacheProvider>();
-builder.Services.AddScoped<ILogProvider, SerilogProvider>();
+builder.Services.AddSingleton<ILogProvider, DummyLogger>();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -20,6 +20,18 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
     c.OperationFilter<AddRequiredHeaderParameter>();
+});
+
+// CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("DevCors", cors =>
+    {
+        cors.WithOrigins("https://localhost:7100")
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials();
+    });
 });
 
 var app = builder.Build();
@@ -31,6 +43,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors("DevCors");
 //app.UseHttpsRedirection();
 app.UseRouting();
 app.UseAuthorization();

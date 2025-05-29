@@ -24,11 +24,11 @@ public class AddProductCommand
         var addProduct = new ProductEntity()
         {
             Name = product.Name,
-            Description = product.Description,
+            Description = "test", //todo
             Slug = product.Slug,
             Price = product.Price,
-            Stock = product.Stock,
-            IsActive = product.IsActive,
+            Stock = 10, //todo
+            IsActive = true, //todo
             DiscountStartDate = product.DiscountStartDate,
             DiscountEndDate = product.DiscountEndDate
         };

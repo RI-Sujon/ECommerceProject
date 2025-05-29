@@ -1,0 +1,78 @@
+@page
+@model Project.Web.Pages.Product.IndexModel
+@{
+    ViewData["Title"] = "Products";
+}
+
+<div class="container p-md-5">
+    <div class="row">
+        <div id="search-bar" class="col-md-9 px-5">
+            <div class="search-container">
+                <input type="text" class="search-input" placeholder="Search...">
+                <i class="fas fa-search search-icon"></i>
+            </div>
+        </div>
+        <div id="add-product-btn" class="col-md-3 pe-5">
+            <button class="add-product-btn w-100" data-bs-toggle="modal" data-bs-target="#addProductModal">
+                <i class="fas fa-plus"></i>
+                Add Product
+            </button>
+        </div>
+    </div>
+    <br /><br />
+    <div id="product-container">
+        <!-- Products will be loaded here dynamically -->
+    </div>
+</div>
+
+<!-- Add Product Modal -->
+<div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content px-4 py-3">
+            <div class="modal-header border-0">
+                <div class="w-100">
+                    <h2 class="modal-title fw-bold" id="addProductModalLabel">Add New Product</h2>
+                    <p class="modal-subtitle text-muted mb-0">Add description of your new product</p>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addProductForm">
+                    <div class="mb-4">
+                        <label for="productName" class="form-label">Product Name</label>
+                        <input type="text" class="form-control" id="productName" required>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <label for="productSlug" class="form-label">Slug</label>
+                            <input type="text" class="form-control" id="productSlug" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="productPrice" class="form-label">Price</label>
+                            <input type="number" class="form-control" id="productPrice" required>
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <label for="discountStart" class="form-label">Discount Start</label>
+                            <input type="date" class="form-control" id="discountStart">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="discountEnd" class="form-label">Discount End</label>
+                            <input type="date" class="form-control" id="discountEnd">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-primary w-100" id="saveProductBtn">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/Services/ProductService.js"></script>
+    <script src="~/js/Components/item-card.js"></script>
+    <script src="~/js/Pages/product-home-page.js"></script>
+}
