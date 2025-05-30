@@ -6,6 +6,18 @@ class ItemCard {
     createCard() {
         const $card = $('<div>').addClass('col-md-3');
         
+        // Calculate discount if within date range
+        const now = new Date();
+        const discountStart = this.product.discountStartDate ? new Date(this.product.discountStartDate) : null;
+        const discountEnd = this.product.discountEndDate ? new Date(this.product.discountEndDate) : null;
+        const isDiscountActive = discountStart && discountEnd && 
+                               now >= discountStart && now <= discountEnd;
+        
+        const originalPrice = this.product.price;
+        const discountedPrice = isDiscountActive ? 
+            originalPrice * 0.75 : // 25% discount
+            originalPrice;
+        
         $card.html(`
             <div class="card h-100 product-card px-4">
                 <div class="position-relative p-3">
@@ -17,16 +29,19 @@ class ItemCard {
                     <h5 class="card-title product-name text-truncate">${this.product.name}</h5>
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <div>
-                            <span class="h5 mb-0 product-price">$${this.product.price.toFixed(2)}</span>
+                            <span class="h5 mb-0 product-price">$${discountedPrice.toFixed(2)}</span>
+                            ${isDiscountActive ? 
+                                `<span class="product-original-price text-decoration-line-through me-2">$${originalPrice.toFixed(2)}</span>` : 
+                                ''}
                         </div>
                     </div>
                     <div class="d-flex justify-content-between align-items-center">
-                        <div class="quantity-controls" style="display: none;">
-                            <span class="quantity-btn" onclick="decreaseQuantity(${JSON.stringify(this.product).replace(/"/g, '&quot;') }, this)">-</span>
-                            <span class="quantity-value">1</span>
+                        <div class="quantity-controls ${this.product.selectedQty ? '' : 'd-none'}">
+                            <span class="quantity-btn" onclick="decreaseQuantity(${JSON.stringify(this.product).replace(/"/g, '&quot;')}, this)">-</span>
+                            <span class="quantity-value">${this.product.selectedQty ? this.product.selectedQty : 1 }</span>
                             <span class="quantity-btn" onclick="increaseQuantity(${JSON.stringify(this.product).replace(/"/g, '&quot;')} , this)">+</span>
                         </div>
-                        <div class="cart-controls">
+                        <div class="cart-controls ${this.product.selectedQty ? 'd-none' : ''}">
                             <button class="btn btn-sm add-to-cart-btn" onclick="addToCart(${JSON.stringify(this.product).replace(/"/g, '&quot;')}, this)">
                                 Add to Cart
                             </button>
@@ -45,7 +60,7 @@ async function increaseQuantity(product, button) {
     const $quantityValue = $controls.find('.quantity-value');
     const currentValue = parseInt($quantityValue.text());
     const newValue = currentValue + 1;
-    debugger
+    
     try {
         const productId = product.id;
         await CartService.addItemToCart(productId, 1);
@@ -67,7 +82,7 @@ async function decreaseQuantity(product, button) {
 
     if (currentValue > 1) {
         try {
-            await CartService.removeItemFromCart(productId);
+            await CartService.decreaseItemQuantity(productId, 1);
             $quantityValue.text(currentValue - 1);
             // Reload cart data
             await window.cart.loadCartItems();
@@ -77,12 +92,11 @@ async function decreaseQuantity(product, button) {
         }
     } else {
         try {
-            await CartService.removeItemFromCart(productId);
+            await CartService.removeItemFromCart(product.cartId);
             
-            // Hide quantity controls and show add to cart button
-            $controls.hide();
-            $card.find('.cart-controls .add-to-cart-btn').show();
-            // Reload cart data
+            $card.find('.cart-controls').removeClass('d-none');
+            $card.find('.quantity-controls').addClass('d-none');
+            
             await window.cart.loadCartItems();
         } catch (error) {
             console.error('Error removing item from cart:', error);
@@ -91,22 +105,17 @@ async function decreaseQuantity(product, button) {
     }
 }
 
-// Add to cart function
 async function addToCart(product, button) {
     const $card = $(button).closest('.card');
     const $quantityValue = $card.find('.quantity-value');
     const quantity = parseInt($quantityValue.text());
     
     try {
-        // Add item to cart via API
         await CartService.addItemToCart(product.id, quantity);
         
-        // Update UI
-        const $cartControls = $(button).closest('.cart-controls');
-        $cartControls.find('.add-to-cart-btn').hide();
-        $card.find('.quantity-controls').show();
+        $card.find('.cart-controls').addClass('d-none');
+        $card.find('.quantity-controls').removeClass('d-none');
         
-        // Reload cart data
         await window.cart.loadCartItems();
     } catch (error) {
         console.error('Error adding to cart:', error);
@@ -114,5 +123,4 @@ async function addToCart(product, button) {
     }
 }
 
-// Export the ItemCard class
 window.ItemCard = ItemCard; 

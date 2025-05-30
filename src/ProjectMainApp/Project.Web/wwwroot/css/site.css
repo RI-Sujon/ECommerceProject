@@ -13,6 +13,7 @@
 
 /* Base Styles */
 body {
+    padding-top: 80px;
     background-color: #ffffff;
     color: var(--primary-green);
 }
@@ -24,6 +25,11 @@ body {
     display: flex;
     align-items: center;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
 }
 
 .navbar-brand {
@@ -54,8 +60,8 @@ body {
 .cart-icon .btn-link {
     color: var(--primary-blue);
     text-decoration: none;
-    padding: 0.4rem 0.8rem;
-    background-color: var(--neutral-gray);
+    padding: 0.5rem 0.9rem;
+    border: 1.5px solid var(--neutral-gray);
     border-radius: 4px;
     display: flex;
     align-items: center;
@@ -152,12 +158,19 @@ body {
 
 .product-original-price {
     color: var(--neutral-text);
+    font-size: 0.75rem;
+    text-decoration: line-through;
+    padding-left: 4px;
 }
 
 /* Badge Styles */
 .badge-discount {
     background-color: var(--primary-blue);
     color: white;
+    font-size: 0.8rem;
+    padding: 0.4rem 0.6rem;
+    border-radius: 4px;
+    font-weight: 500;
 }
 
 .badge-new {
@@ -586,7 +599,7 @@ body {
     display: flex;
     align-items: center;
     padding: 15px 0;
-    border-bottom: 1px solid var(--neutral-gray);
+    border-bottom: 1px dashed var(--neutral-gray);
 }
 
 .cart-item:last-child {
@@ -632,6 +645,23 @@ body {
 .cart-item-price {
     color: var(--neutral-text);
     font-size: 16px;
+}
+
+.cart-total {
+    padding: 20px;
+}
+
+.total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+
+.total-amount {
+    color: var(--primary-color);
+    font-weight: 600;
 }
 
 /* Body class when cart is open */

@@ -13,5 +13,6 @@ namespace Project.Application.Service.Defination
         Task<CartResponseModel> AddItemToCart(CartRequestModel request, int userId);
         Task<List<CartResponseModel>> GetCart(int userId);
         Task<bool> RemoveItemFromCart(int cartItemId, int userId);
+        Task<CartResponseModel> DecreaseItemQuantity(CartRequestModel request, int userId);
     }
 }

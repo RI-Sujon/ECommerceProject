@@ -28,6 +28,7 @@ public static class ManagersDependencyGroup
         services.AddTransient<AddItemToCartCommand>();
         services.AddTransient<RemoveItemFromCartCommand>();
         services.AddTransient<GetCartQuery>();
+        services.AddTransient<DecreaseItemQuantityCommand>();
         
         return services;
     }

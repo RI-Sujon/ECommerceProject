@@ -51,5 +51,16 @@ namespace Project.Application.Provider.Cart
 
             return result;
         }
+
+        public async Task<CartResponseModel> DecreaseItemQuantity(CartRequestModel request, int userId)
+        {
+            var decreaseItemQuantityCommand = _serviceProvider.GetRequiredService<DecreaseItemQuantityCommand>();
+
+            _applicationContext.Log.LogInformation($"Going to execute DecreaseItemQuantity for ProductId: {request.ProductId}");
+            var result = await decreaseItemQuantityCommand.DecreaseItemQuantity(request, userId);
+            _applicationContext.Log.LogInformation($"Completed DecreaseItemQuantity for ProductId: {request.ProductId}");
+
+            return result;
+        }
     }
 }

@@ -7,13 +7,14 @@ class ProductHomePage {
         this.totalCount = 0;
         this.pageSizeOptions = [8, 16, 24, 32];
         this.searchText = '';
+        this.cartItems = [];
     }
 
     async initialize() {
         try {
             // Render top cards first
-            this.renderTopCards();
-
+            //this.renderTopCards();
+            
             const request = {
                 page: this.currentPage,
                 pageSize: this.pageSize,
@@ -23,10 +24,25 @@ class ProductHomePage {
             };
             const result = await ProductService.getProductList(request);
             this.totalCount = result.totalCount;
+            
+            this.cartItems = Common.getCartItems();
+            this.changeCountQtyValue(this.cartItems, result.products)
+
             this.renderProducts(result.products, result.page, result.totalCount);
         } catch (error) {
             console.error('Error initializing product page:', error);
             this.showError('Failed to load products. Please try again later.');
+        }
+    }
+
+    async changeCountQtyValue(cartItems, products) {
+        for (let i = 0; i < products.length; i++) {
+            for (let j = 0; j < cartItems.length; j++) {
+                if (products[i].id == cartItems[j].productId) {
+                    products[i].selectedQty = cartItems[j].quantity;
+                    products[i].cartId = cartItems[j].id;
+                }
+            }
         }
     }
 
@@ -53,6 +69,8 @@ class ProductHomePage {
                 maxPrice: null
             };
             const result = await ProductService.getProductList(request);
+
+            this.changeCountQtyValue(this.cartItems, result.products)
             this.renderProducts(result.products, result.page, result.totalCount);
         } catch (error) {
             console.error('Error fetching products:', error);
@@ -218,6 +236,7 @@ class ProductHomePage {
 // Initialize the page when the DOM is loaded
 $(document).ready(() => {
     const productPage = new ProductHomePage();
+    productPage.renderTopCards();
     productPage.initialize();
 
     // Search functionality
@@ -246,7 +265,7 @@ $(document).ready(() => {
             await ProductService.addProduct(productData);
             $('#addProductModal').modal('hide');
             $('#addProductForm')[0].reset();
-            // Refresh the product list
+            
             productPage.initialize();
             
         } catch (error) {

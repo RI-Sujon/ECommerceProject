@@ -54,11 +54,12 @@ namespace Project.Application.Provider.Product.Query
                 TotalCount = await query.CountAsync()
             };
 
-            // Apply pagination
+            // Apply descending order by Id
             var products = await query
+                .OrderByDescending(p => p.Id)
                 .Skip((int)((request.Page - 1) * request.PageSize))
                 .Take((int)request.PageSize)
-                .Select(p => new ProductResponseModel // Map ProductEntity to ProductResponseModel
+                .Select(p => new ProductResponseModel
                 {
                     Id = p.Id,
                     Name = p.Name,
@@ -72,7 +73,7 @@ namespace Project.Application.Provider.Product.Query
                 })
                 .ToListAsync();
 
-            response.Products = products; // Assign the correctly mapped list
+            response.Products = products;
             return response;
         }
     }

@@ -15,6 +15,8 @@ class Cart {
         try {
             const response = await CartService.getCartItems();
             this.items = response;
+            Common.setCartItems(this.items);
+          
             this.renderItems();
             this.updateCartCount();
         } catch (error) {
@@ -34,6 +36,12 @@ class Cart {
                     </button>
                 </div>
                 <div class="cart-items"></div>
+                <div class="cart-total">
+                    <div class="total-row">
+                        <span>Subtotal</span>
+                        <span class="total-amount">$0.00</span>
+                    </div>
+                </div>
             </div>
         `);
 
@@ -120,11 +128,16 @@ class Cart {
 
         if (this.items.length === 0) {
             $itemsContainer.html('<div class="empty-cart">Your cart is empty</div>');
+            this.updateTotal(0);
             return;
         }
 
+        let total = 0;
         this.items.forEach(item => {
             const price = typeof item.productPrice === 'number' ? item.productPrice : 0;
+            const itemTotal = price * item.quantity;
+            total += itemTotal;
+
             const $item = $(`
                 <div class="cart-item" data-id="${item.productId}">
                     <div class="cart-item-image">
@@ -146,6 +159,13 @@ class Cart {
 
             $itemsContainer.append($item);
         });
+
+        this.updateTotal(total);
+    }
+
+    updateTotal(total) {
+        const $totalAmount = this.cartContainer.find('.total-amount');
+        $totalAmount.text(`$${total.toFixed(2)}`);
     }
 
     updateCartCount() {
@@ -155,10 +175,10 @@ class Cart {
         
         if (totalItems > 0) {
             $cartBtn.addClass('has-items');
-            $cartCount.text(totalItems);
+            $cartCount.text("Cart (" + totalItems + ")");
         } else {
             $cartBtn.removeClass('has-items');
-            $cartCount.text('');
+            $cartCount.text('Cart (0)');
         }
     }
 }

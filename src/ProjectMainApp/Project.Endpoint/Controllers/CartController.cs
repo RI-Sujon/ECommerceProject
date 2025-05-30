@@ -133,5 +133,41 @@ namespace Project.Endpoint.Controllers
                 });
             }
         }
+
+        [HttpPost("decrease-item-quantity")]
+        public async Task<ActionResult> DecreaseItemQuantity(CartRequestModel request)
+        {
+            try
+            {
+                var response = new ResponseModel<CartResponseModel>();
+                var requestHeaders = await GetRequestHeadersAsync();
+
+                _applicationContext.Log.LogInformation($"Going to execute _cartService.DecreaseItemQuantity for ProductId: {request.ProductId}");
+                var cartResponse = await _cartService.DecreaseItemQuantity(request, requestHeaders.UserId);
+                _applicationContext.Log.LogInformation($"Completed _cartService.DecreaseItemQuantity for ProductId: {request.ProductId}");
+
+                if (cartResponse != null)
+                {
+                    response.IsSuccess = true;
+                    response.Data = cartResponse;
+                    return Ok(response);
+                }
+                else
+                {
+                    response.IsSuccess = false;
+                    response.ErrorMessage = "Failed to decrease item quantity.";
+                    return BadRequest(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                _applicationContext.Log.LogError(ex, "DecreaseItemQuantity - Exception");
+                return StatusCode(500, new ResponseModel<CartResponseModel>
+                {
+                    IsSuccess = false,
+                    ErrorMessage = "An unexpected error occurred."
+                });
+            }
+        }
     }
 }

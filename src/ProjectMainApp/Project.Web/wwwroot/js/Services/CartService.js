@@ -25,10 +25,34 @@ const CartService = {
         }
     },
 
-    async removeItemFromCart(productId) {
+    async decreaseItemQuantity(productId, quantity) {
         try {
             const response = await $.ajax({
-                url: `${this.baseUrl}/remove-item-from-cart/${productId}`,
+                url: `${this.baseUrl}/decrease-item-quantity`,
+                method: 'POST',
+                contentType: 'application/json',
+                headers: ServiceUtils.getHeaders(),
+                data: JSON.stringify({
+                    productId: productId,
+                    quantity: quantity
+                })
+            });
+
+            if (response.isSuccess) {
+                return response.data;
+            } else {
+                throw new Error(response.message || 'Failed to decrease item quantity');
+            }
+        } catch (error) {
+            console.error('Error decreasing item quantity:', error);
+            throw error;
+        }
+    },
+
+    async removeItemFromCart(cartId) {
+        try {
+            const response = await $.ajax({
+                url: `${this.baseUrl}/remove-item-from-cart/${cartId}`,
                 method: 'DELETE',
                 contentType: 'application/json',
                 headers: ServiceUtils.getHeaders()
