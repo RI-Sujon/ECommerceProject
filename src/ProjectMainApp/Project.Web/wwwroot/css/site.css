@@ -461,6 +461,55 @@ body {
     opacity: 0.8;
 }
 
+#addProductModal .input-group .btn-outline-secondary {
+    border-color: var(--neutral-gray);
+    color: var(--primary-blue);
+    background-color: #ffffff;
+    height: 38px;
+    padding: 0 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#addProductModal .input-group .btn-outline-secondary:hover {
+    background-color: var(--primary-blue);
+    border-color: var(--primary-blue);
+    color: #ffffff;
+}
+
+#addProductModal .input-group .btn-outline-secondary i {
+    font-size: 0.9rem;
+}
+
+#addProductModal .input-group {
+    position: relative;
+}
+
+#addProductModal .input-group .form-control {
+    padding-right: 100px;
+}
+
+#addProductModal .input-group .generate-btn {
+    position: absolute;
+    right: 4px;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 30px;
+    padding: 0 12px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    background-color: var(--primary-blue);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    z-index: 2;
+}
+
+#addProductModal .input-group .generate-btn:hover {
+    background-color: var(--primary-blue-dark);
+}
+
 .top-card {
     background-color: var(--primary-blue);
     border-radius: 8px;

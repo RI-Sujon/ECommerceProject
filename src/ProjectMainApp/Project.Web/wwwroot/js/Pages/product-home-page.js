@@ -251,6 +251,32 @@ $(document).ready(() => {
         productPage.handleSearch();
     });
 
+    // Generate Slug functionality
+    $('#generateSlugBtn').on('click', function() {
+        const productName = $('#productName').val();
+        if (productName) {
+            const slug = productName
+                .toLowerCase()
+                .replace(/[^a-z0-9]+/g, '-') // Replace any non-alphanumeric characters with hyphens
+                .replace(/^-+|-+$/g, ''); // Remove leading and trailing hyphens
+            $('#productSlug').val(slug);
+        }
+    });
+
+    // Auto-generate slug when product name changes
+    $('#productName').on('input', function() {
+        if ($('#productSlug').val() === '') {
+            const productName = $(this).val();
+            if (productName) {
+                const slug = productName
+                    .toLowerCase()
+                    .replace(/[^a-z0-9]+/g, '-')
+                    .replace(/^-+|-+$/g, '');
+                $('#productSlug').val(slug);
+            }
+        }
+    });
+
     // Add Product Form Handler
     $('#saveProductBtn').on('click', async function() {
         const productData = {
