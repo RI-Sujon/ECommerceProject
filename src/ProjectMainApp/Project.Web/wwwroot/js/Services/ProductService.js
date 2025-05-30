@@ -1,59 +1,41 @@
 const ProductService = {
     baseUrl: 'https://localhost:7056/api/product',
 
-    getProductList: async function(request) {
+    async getProductList(request) {
         try {
             const response = await $.ajax({
                 url: `${this.baseUrl}/get-product-list`,
                 method: 'POST',
                 contentType: 'application/json',
-                data: JSON.stringify(request)
-            });
-            
-            if (response.isSuccess) {
-                return response.data;
-            } else {
-                throw new Error(response.errorMessage || 'Failed to get products');
-            }
-        } catch (error) {
-            console.error('Error in getProductList:', error);
-            throw error;
-        }
-    },
-
-    addToCart: async function(request) {
-        try {
-            const response = await $.ajax({
-                url: '/api/cart/add-item-to-cart',
-                method: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify(request)
+                data: JSON.stringify(request),
+                headers: ServiceUtils.getHeaders(),
             });
 
             if (response.isSuccess) {
                 return response.data;
             } else {
-                throw new Error(response.errorMessage || 'Failed to add item to cart');
+                throw new Error(response.message || 'Failed to get products');
             }
         } catch (error) {
-            console.error('Error in addToCart:', error);
+            console.error('Error getting products:', error);
             throw error;
         }
     },
 
-    async addProduct(productData) {
+    async addProduct(product) {
         try {
             const response = await $.ajax({
                 url: `${this.baseUrl}/add-product`,
                 method: 'POST',
                 contentType: 'application/json',
-                data: JSON.stringify(productData)
+                headers: ServiceUtils.getHeaders(),
+                data: JSON.stringify(product)
             });
-            
+
             if (response.isSuccess) {
                 return response.data;
             } else {
-                throw new Error(response.errorMessage || 'Failed to add product');
+                throw new Error(response.message || 'Failed to add product');
             }
         } catch (error) {
             console.error('Error adding product:', error);
@@ -62,5 +44,5 @@ const ProductService = {
     }
 };
 
-// Export the ProductService
+// Initialize the service
 window.ProductService = ProductService; 

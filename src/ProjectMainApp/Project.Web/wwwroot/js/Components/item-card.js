@@ -5,6 +5,7 @@ class ItemCard {
 
     createCard() {
         const $card = $('<div>').addClass('col-md-3');
+        
         $card.html(`
             <div class="card h-100 product-card px-4">
                 <div class="position-relative p-3">
@@ -21,12 +22,12 @@ class ItemCard {
                     </div>
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="quantity-controls" style="display: none;">
-                            <span class="quantity-btn" onclick="decreaseQuantity(this)">-</span>
+                            <span class="quantity-btn" onclick="decreaseQuantity(${JSON.stringify(this.product).replace(/"/g, '&quot;') }, this)">-</span>
                             <span class="quantity-value">1</span>
-                            <span class="quantity-btn" onclick="increaseQuantity(this)">+</span>
+                            <span class="quantity-btn" onclick="increaseQuantity(${JSON.stringify(this.product).replace(/"/g, '&quot;')} , this)">+</span>
                         </div>
                         <div class="cart-controls">
-                            <button class="btn btn-sm add-to-cart-btn" onclick="addToCart(${this.product.id}, this)">
+                            <button class="btn btn-sm add-to-cart-btn" onclick="addToCart(${JSON.stringify(this.product).replace(/"/g, '&quot;')}, this)">
                                 Add to Cart
                             </button>
                         </div>
@@ -39,35 +40,78 @@ class ItemCard {
 }
 
 // Quantity control functions
-function increaseQuantity(button) {
+async function increaseQuantity(product, button) {
     const $controls = $(button).closest('.quantity-controls');
     const $quantityValue = $controls.find('.quantity-value');
     const currentValue = parseInt($quantityValue.text());
-    $quantityValue.text(currentValue + 1);
+    const newValue = currentValue + 1;
+    debugger
+    try {
+        const productId = product.id;
+        await CartService.addItemToCart(productId, 1);
+        $quantityValue.text(newValue);
+        // Reload cart data
+        await window.cart.loadCartItems();
+    } catch (error) {
+        console.error('Error increasing quantity:', error);
+        alert('Failed to update quantity. Please try again.');
+    }
 }
 
-function decreaseQuantity(button) {
+async function decreaseQuantity(product, button) {
     const $controls = $(button).closest('.quantity-controls');
     const $quantityValue = $controls.find('.quantity-value');
     const currentValue = parseInt($quantityValue.text());
+    const $card = $(button).closest('.card');
+    const productId = product.id;
+
     if (currentValue > 1) {
-        $quantityValue.text(currentValue - 1);
+        try {
+            await CartService.removeItemFromCart(productId);
+            $quantityValue.text(currentValue - 1);
+            // Reload cart data
+            await window.cart.loadCartItems();
+        } catch (error) {
+            console.error('Error decreasing quantity:', error);
+            alert('Failed to update quantity. Please try again.');
+        }
+    } else {
+        try {
+            await CartService.removeItemFromCart(productId);
+            
+            // Hide quantity controls and show add to cart button
+            $controls.hide();
+            $card.find('.cart-controls .add-to-cart-btn').show();
+            // Reload cart data
+            await window.cart.loadCartItems();
+        } catch (error) {
+            console.error('Error removing item from cart:', error);
+            alert('Failed to remove item. Please try again.');
+        }
     }
 }
 
 // Add to cart function
-function addToCart(productId, button) {
+async function addToCart(product, button) {
     const $card = $(button).closest('.card');
     const $quantityValue = $card.find('.quantity-value');
     const quantity = parseInt($quantityValue.text());
     
-    // Hide the add to cart button and show quantity controls
-    const $cartControls = $(button).closest('.cart-controls');
-    $cartControls.find('.add-to-cart-btn').hide();
-    $card.find('.quantity-controls').show();
-    
-    // TODO: Implement cart functionality
-    console.log(`Adding product ${productId} to cart with quantity ${quantity}`);
+    try {
+        // Add item to cart via API
+        await CartService.addItemToCart(product.id, quantity);
+        
+        // Update UI
+        const $cartControls = $(button).closest('.cart-controls');
+        $cartControls.find('.add-to-cart-btn').hide();
+        $card.find('.quantity-controls').show();
+        
+        // Reload cart data
+        await window.cart.loadCartItems();
+    } catch (error) {
+        console.error('Error adding to cart:', error);
+        alert('Failed to add item to cart. Please try again.');
+    }
 }
 
 // Export the ItemCard class

@@ -12,10 +12,10 @@ public class BaseController : ControllerBase
         var userName = string.Empty;
         var userId = 0;
         
-        userName = headers.Where(h => h.Key.Equals("UserName", StringComparison.OrdinalIgnoreCase))
+        userName = headers.Where(h => h.Key.Equals("x-username", StringComparison.OrdinalIgnoreCase))
             .Select(h => h.Value).FirstOrDefault();
 
-        var userIdInRequest = headers.Where(h => h.Key.Equals("UserId", StringComparison.OrdinalIgnoreCase))
+        var userIdInRequest = headers.Where(h => h.Key.Equals("x-user-id", StringComparison.OrdinalIgnoreCase))
             .Select(h => h.Value).FirstOrDefault();
         
         int.TryParse(userIdInRequest, out userId);

@@ -6,14 +6,18 @@ class ProductHomePage {
         this.pageSize = 8;
         this.totalCount = 0;
         this.pageSizeOptions = [8, 16, 24, 32];
+        this.searchText = '';
     }
 
     async initialize() {
         try {
+            // Render top cards first
+            this.renderTopCards();
+
             const request = {
                 page: this.currentPage,
                 pageSize: this.pageSize,
-                searchText: '',
+                searchText: this.searchText,
                 minPrice: null,
                 maxPrice: null
             };
@@ -44,7 +48,7 @@ class ProductHomePage {
             const request = {
                 page: this.currentPage,
                 pageSize: this.pageSize,
-                searchText: '',
+                searchText: this.searchText,
                 minPrice: null,
                 maxPrice: null
             };
@@ -54,6 +58,12 @@ class ProductHomePage {
             console.error('Error fetching products:', error);
             this.showError('Failed to load products. Please try again later.');
         }
+    }
+
+    async handleSearch() {
+        this.searchText = $('.search-input').val().trim();
+        this.currentPage = 1; // Reset to first page when searching
+        await this.fetchAndRenderProducts();
     }
 
     getTotalPages() {
@@ -153,6 +163,47 @@ class ProductHomePage {
         this.productContainer.append($paginationContainer);
     }
 
+    renderTopCards() {
+        const cards = [
+            {
+                logo: '<i class="fas fa-university fa-2x"></i>',
+                title: 'Total Products: 100',
+                subtitle: 'Warehouse has total of 100 product today & max capacity is 200.'
+            },
+            {
+                logo: '<i class="fas fa-user-secret fa-2x"></i>',
+                title: 'Total Vendor: 6',
+                subtitle: 'A total of out of 6 out of 10 vendor are available for supply now.'
+            },
+            {
+                logo: '<i class="fas fa-cube fa-2x"></i>',
+                title: 'Unique Product: 40',
+                subtitle: 'Total number of products thats are not duplicate or redundant.'
+            }
+        ];
+
+        const $topCardsContainer = $('<div class="row px-3 py-4">');
+        
+        cards.forEach(card => {
+            const $card = $(`
+                <div class="col-md-4">
+                    <div class="top-card">
+                        <div class="top-card-content">
+                            <div class="top-card-logo">
+                                ${card.logo}
+                            </div>
+                            <h3 class="top-card-title">${card.title}</h3>
+                            <p class="top-card-subtitle">${card.subtitle}</p>
+                        </div>
+                    </div>
+                </div>
+            `);
+            $topCardsContainer.append($card);
+        });
+
+        $("#topCardsContainer").append($topCardsContainer);
+    }
+
     showError(message) {
         if (this.productContainer.length) {
             this.productContainer.html(`
@@ -168,6 +219,18 @@ class ProductHomePage {
 $(document).ready(() => {
     const productPage = new ProductHomePage();
     productPage.initialize();
+
+    // Search functionality
+    $('.search-input').on('keypress', function(e) {
+        if (e.which === 13) { // Enter key
+            e.preventDefault();
+            productPage.handleSearch();
+        }
+    });
+
+    $('.search-icon').on('click', function() {
+        productPage.handleSearch();
+    });
 
     // Add Product Form Handler
     $('#saveProductBtn').on('click', async function() {

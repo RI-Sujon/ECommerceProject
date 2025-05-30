@@ -4,7 +4,10 @@
     ViewData["Title"] = "Products";
 }
 
-<div class="container p-md-5">
+<div class="container px-md-5">
+    <div id="topCardsContainer">
+
+    </div>
     <div class="row">
         <div id="search-bar" class="col-md-9 px-5">
             <div class="search-container">
@@ -19,7 +22,7 @@
             </button>
         </div>
     </div>
-    <br /><br />
+    <br />
     <div id="product-container">
         <!-- Products will be loaded here dynamically -->
     </div>
@@ -73,6 +76,8 @@
 
 @section Scripts {
     <script src="~/js/Services/ProductService.js"></script>
+    <script src="~/js/Services/CartService.js"></script>
     <script src="~/js/Components/item-card.js"></script>
+    <script src="~/js/Components/cart.js"></script>
     <script src="~/js/Pages/product-home-page.js"></script>
 }
