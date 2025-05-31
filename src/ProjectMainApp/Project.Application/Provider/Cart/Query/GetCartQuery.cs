@@ -20,23 +20,31 @@ namespace Project.Application.Provider.Cart.Query
 
         public async Task<List<CartResponseModel>> GetCart(int userId)
         {
+            var now = DateTime.UtcNow;
             var cartItems = await _dbContext.Carts
                 .Where(c => c.UserId == userId)
                 .Join(_dbContext.Products,
                     cart => cart.ProductId,
                     product => product.Id,
-                    (cart, product) => new CartResponseModel
+                    (cart, product) => new
                     {
-                        Id = cart.Id,
-                        UserId = cart.UserId,
-                        ProductId = cart.ProductId,
-                        ProductName = product.Name,
-                        ProductPrice = product.Price,
-                        Quantity = cart.Quantity,
-                        TotalPrice = product.Price * cart.Quantity,
-                        CreatedAt = cart.CreatedAt,
-                        UpdatedAt = cart.UpdatedAt
+                        Cart = cart,
+                        Product = product,
+                        IsDiscounted = product.DiscountStartDate.HasValue && product.DiscountEndDate.HasValue
+                            && product.DiscountStartDate.Value <= now && product.DiscountEndDate.Value >= now
                     })
+                .Select(x => new CartResponseModel
+                {
+                    Id = x.Cart.Id,
+                    UserId = x.Cart.UserId,
+                    ProductId = x.Cart.ProductId,
+                    ProductName = x.Product.Name,
+                    ProductPrice = x.IsDiscounted ? x.Product.Price * 0.75m : x.Product.Price,
+                    Quantity = x.Cart.Quantity,
+                    TotalPrice = (x.IsDiscounted ? x.Product.Price * 0.75m : x.Product.Price) * x.Cart.Quantity,
+                    CreatedAt = x.Cart.CreatedAt,
+                    UpdatedAt = x.Cart.UpdatedAt
+                })
                 .ToListAsync();
 
             return cartItems;
