@@ -1,0 +1,15 @@
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS base
+
+WORKDIR /src
+
+COPY src/ProjectMainApp ./ProjectMainApp/
+
+WORKDIR /src/ProjectMainApp/Project.Data
+RUN dotnet restore
+RUN dotnet publish Project.Data.csproj -c Release --output /app/publish
+
+WORKDIR /src/ProjectMainApp/Project.Data
+COPY ops/docker/dbupdate.sh /src/dbupdate.sh
+
+ENTRYPOINT ["/bin/bash", "/src/dbupdate.sh"]
+#ENTRYPOINT ["sleep", "infinity"]
