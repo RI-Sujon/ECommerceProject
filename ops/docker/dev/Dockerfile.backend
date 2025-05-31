@@ -4,16 +4,16 @@ WORKDIR /app
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
 
-COPY src/ProjectMainApp /ProjectMainApp/
+COPY src/ProjectMainApp ./ProjectMainApp/
 
-WORKDIR /src/ProjectMainApp
-RUN dotnet restore ProjectMainApp.sln
 WORKDIR /src/ProjectMainApp/Project.Endpoint
+RUN dotnet restore
 RUN dotnet publish Project.Endpoint.csproj -c Release --output /app/publish
 
 FROM base AS final
 WORKDIR /app
 COPY --from=build /app/publish .
 COPY ops/docker/backend-entrypoint.sh /app/backend-entrypoint.sh
+
 
 ENTRYPOINT ["/bin/sh", "/app/backend-entrypoint.sh"]
