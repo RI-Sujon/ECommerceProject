@@ -1,5 +1,5 @@
 const ProductService = {
-    baseUrl: 'https://localhost:7056/api/product',
+    baseUrl: 'http://localhost:5032/api/product',
 
     async getProductList(request) {
         try {

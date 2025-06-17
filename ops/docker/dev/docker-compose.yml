@@ -9,34 +9,36 @@ services:
     ports:
       - "55432:5432"
 
-  backend:
+  e-com-backend:
     build:
       context: ../../..
-      dockerfile: ops/docker/dev/Dockerfile.backend
+      dockerfile: ops/docker/dev/Dockerfile.e-com-backend
     ports:
-      - "5001:8081"
-      - "5000:500"
+      - "5109:8080"
     depends_on:
       - db
     environment:
       ASPNETCORE_ENVIRONMENT: Development
-      ASPNETCORE_URLS: http://*:5000
+      ASPNETCORE_URLS: http://*:8080
 
-  # frontend:
+  # e-com-frontend:
   #   build:
   #     context: ../../..
-  #     dockerfile: ops/docker/dev/Dockerfile.frontend
+  #     dockerfile: ops/docker/dev/Dockerfile.e-com-frontend
   #   ports:
-  #     - "3000:3000"
+  #     - "5032:8080"
   #   depends_on:
-  #     - backend
+  #     - e-com-backend
+  #   environment:
+  #     ASPNETCORE_ENVIRONMENT: Development
+  #     ASPNETCORE_URLS: http://*:8080
 
-  dbupdate:
+  e-com-dbupdate:
     build:
       context: ../../..
-      dockerfile: ops/docker/dev/Dockerfile.dbupdater
+      dockerfile: ops/docker/dev/Dockerfile.e-com-dbupdater
     depends_on:
       - db
-      - backend
-    #volumes:
-    #  - ../../src/mainapp/BoooksMainApp:/src/BoooksMainApp
+      - e-com-backend
+    volumes:
+      - ../../src/ProjectMainApp:/src/ProjectMainApp

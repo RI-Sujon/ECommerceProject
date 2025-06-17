@@ -23,6 +23,7 @@
     <ProjectReference Include="..\Project.Application\Project.Application.csproj" />
     <ProjectReference Include="..\Project.Core\Project.Core.csproj" />
     <ProjectReference Include="..\Project.Object\Project.Object.csproj" />
+    <ProjectReference Include="..\Project.Data\Project.Data.csproj" />
   </ItemGroup>
 
 </Project>

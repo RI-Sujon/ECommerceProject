@@ -1,0 +1,19 @@
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS base
+
+WORKDIR /src
+
+COPY src/ProjectMainApp ./ProjectMainApp/
+
+# Install EF Core Tools as global tool
+RUN dotnet tool install --global dotnet-ef --version 9.0.*
+ENV PATH="$PATH:/root/.dotnet/tools"
+
+WORKDIR /src/ProjectMainApp/Project.Endpoint
+RUN dotnet restore
+RUN dotnet publish Project.Endpoint.csproj -c Release --output /app/publish
+
+WORKDIR /src/ProjectMainApp/Project.Data
+COPY ops/docker/e-com-dbupdate.sh /src/e-com-dbupdate.sh
+
+ENTRYPOINT ["/bin/sh", "/src/e-com-dbupdate.sh"]
+#ENTRYPOINT ["sleep", "infinity"]
