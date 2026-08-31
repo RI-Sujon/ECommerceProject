@@ -30,23 +30,32 @@ class Cart {
         this.cartContainer = $(`
             <div class="cart-container">
                 <div class="cart-header">
-                    <h3>Shopping Cart</h3>
-                    <button class="close-cart">
+                    <h3><i class="fas fa-shopping-bag me-2" style="color:var(--accent)"></i>Shopping Cart</h3>
+                    <button class="close-cart" title="Close cart">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
                 <div class="cart-items"></div>
                 <div class="cart-total">
                     <div class="total-row">
-                        <span>Subtotal</span>
+                        <span style="color:var(--neutral-600)">Subtotal</span>
                         <span class="total-amount">$0.00</span>
                     </div>
+                    <button id="checkout-btn" class="btn btn-primary w-100 mt-3" style="display:none;height:44px;font-weight:600">
+                        <i class="fas fa-credit-card me-2"></i>Checkout
+                    </button>
                 </div>
             </div>
         `);
 
         // Append to body
         $('body').append(this.cartOverlay).append(this.cartContainer);
+
+        // Checkout handler — navigate to checkout page
+        this.cartContainer.on('click', '#checkout-btn', () => {
+            this.closeCart();
+            window.location.href = '/Order/Checkout';
+        });
     }
 
     bindEvents() {
@@ -127,7 +136,12 @@ class Cart {
         $itemsContainer.empty();
 
         if (this.items.length === 0) {
-            $itemsContainer.html('<div class="empty-cart">Your cart is empty</div>');
+            $itemsContainer.html(`
+                <div class="empty-cart">
+                    <i class="fas fa-shopping-bag fa-3x mb-3 d-block" style="color:var(--neutral-300)"></i>
+                    <p style="font-family:var(--font-display);color:var(--primary);font-weight:600;margin-bottom:0.25rem">Your cart is empty</p>
+                    <small class="text-muted">Add some items to get started</small>
+                </div>`);
             this.updateTotal(0);
             return;
         }
@@ -166,20 +180,19 @@ class Cart {
     updateTotal(total) {
         const $totalAmount = this.cartContainer.find('.total-amount');
         $totalAmount.text(`$${total.toFixed(2)}`);
+        const $btn = this.cartContainer.find('#checkout-btn');
+        if (this.items.length > 0 && Common.isLoggedIn()) {
+            $btn.show();
+        } else {
+            $btn.hide();
+        }
     }
 
     updateCartCount() {
         const totalItems = this.items.reduce((total, item) => total + (item.quantity || 0), 0);
-        const $cartBtn = $('.cart-icon .btn-link');
-        const $cartCount = $cartBtn.find('.cart-count');
-        
-        if (totalItems > 0) {
-            $cartBtn.addClass('has-items');
-            $cartCount.text("Cart (" + totalItems + ")");
-        } else {
-            $cartBtn.removeClass('has-items');
-            $cartCount.text('Cart (0)');
-        }
+        const $count = $('.cart-count');
+        $count.text(totalItems > 0 ? totalItems : '');
+        $count.toggleClass('d-none', totalItems === 0);
     }
 }
 

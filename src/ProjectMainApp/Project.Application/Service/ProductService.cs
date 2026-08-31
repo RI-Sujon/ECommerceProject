@@ -33,10 +33,26 @@ namespace Project.Application.Service
 
         public async Task<GetProductListResponse> GetProductList(GetProductListRequest request)
         {
-            _applicationContext.Log.LogInformation("Going to execute GetProductList in service");
-            var result = await _productProvider.GetProductList(request);
-            _applicationContext.Log.LogInformation("Completed GetProductList in service");
-            return result;
+            _applicationContext.Log.LogInformation("GetProductList in service");
+            return await _productProvider.GetProductList(request);
+        }
+
+        public async Task<ProductResponseModel> GetProductById(int id)
+        {
+            _applicationContext.Log.LogInformation($"GetProductById: {id}");
+            return await _productProvider.GetProductById(id);
+        }
+
+        public async Task<ProductResponseModel> UpdateProduct(int id, ProductRequestModel product)
+        {
+            _applicationContext.Log.LogInformation($"UpdateProduct: {id}");
+            return await _productProvider.UpdateProduct(id, product);
+        }
+
+        public async Task DeleteProduct(int id)
+        {
+            _applicationContext.Log.LogInformation($"DeleteProduct: {id}");
+            await _productProvider.DeleteProduct(id);
         }
     }
 }

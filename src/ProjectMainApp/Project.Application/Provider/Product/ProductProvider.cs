@@ -4,7 +4,6 @@ using Project.Application.Provider.Product.Query;
 using Project.Core;
 using Project.Object.Requests;
 using Project.Object.Responses;
-
 namespace Project.Application.Provider.Product
 {
     public class ProductProvider : IProductProvider
@@ -37,6 +36,24 @@ namespace Project.Application.Provider.Product
             var response = await getProductListQuery.GetProductList(request);
             _applicationContext.Log.LogInformation("Completed GetProductList in provider");
             return response;
+        }
+
+        public async Task<ProductResponseModel> GetProductById(int id)
+        {
+            var query = _serviceProvider.GetRequiredService<GetProductByIdQuery>();
+            return await query.GetProductById(id);
+        }
+
+        public async Task<ProductResponseModel> UpdateProduct(int id, ProductRequestModel product)
+        {
+            var command = _serviceProvider.GetRequiredService<UpdateProductCommand>();
+            return await command.UpdateProduct(id, product);
+        }
+
+        public async Task DeleteProduct(int id)
+        {
+            var command = _serviceProvider.GetRequiredService<DeleteProductCommand>();
+            await command.DeleteProduct(id);
         }
     }
 }

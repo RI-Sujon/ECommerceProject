@@ -1,0 +1,80 @@
+@page
+@model Project.Web.Pages.AboutModel
+@{
+    ViewData["Title"] = "About Us";
+}
+
+<div class="container px-md-5 py-5 fade-in">
+    <!-- Hero -->
+    <div class="text-center mb-5">
+        <h2 class="page-title"><i class="fas fa-store"></i>About E-Bazaar</h2>
+        <p class="text-muted mx-auto" style="max-width:640px;line-height:1.8">
+            A curated marketplace blending timeless elegance with modern convenience.
+            We believe shopping should be an experience, not just a transaction.
+        </p>
+    </div>
+
+    <!-- Story -->
+    <div class="row align-items-center mb-5">
+        <div class="col-md-6 mb-4 mb-md-0">
+            <div class="p-4" style="background:var(--neutral-50);border-radius:var(--radius-lg);border-left:4px solid var(--accent)">
+                <h4 style="font-family:var(--font-display);color:var(--primary)">Our Story</h4>
+                <p class="text-muted" style="line-height:1.8">
+                    Founded with a passion for quality, E-Bazaar started as a small idea —
+                    bringing hand-picked, premium products to discerning customers worldwide.
+                    Today, we serve thousands of happy customers who trust us for quality, authenticity, and style.
+                </p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="p-4" style="background:var(--neutral-50);border-radius:var(--radius-lg);border-left:4px solid var(--accent)">
+                <h4 style="font-family:var(--font-display);color:var(--primary)">Our Mission</h4>
+                <p class="text-muted" style="line-height:1.8">
+                    To provide an exceptional shopping experience through carefully curated products,
+                    seamless service, and a commitment to customer satisfaction. Every item in our
+                    collection is chosen with care and attention to detail.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Values -->
+    <h4 class="text-center mb-4" style="font-family:var(--font-display);color:var(--primary)">What We Stand For</h4>
+    <div class="row text-center mb-5">
+        <div class="col-md-3 mb-3">
+            <div class="card h-100 p-4" style="border:none;background:var(--neutral-50);border-radius:var(--radius-lg)">
+                <i class="fas fa-gem fa-2x mb-3" style="color:var(--accent)"></i>
+                <h6 class="fw-bold">Quality First</h6>
+                <p class="text-muted small mb-0">Every product meets our rigorous quality standards before reaching you.</p>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card h-100 p-4" style="border:none;background:var(--neutral-50);border-radius:var(--radius-lg)">
+                <i class="fas fa-shield-alt fa-2x mb-3" style="color:var(--accent)"></i>
+                <h6 class="fw-bold">Trust &amp; Security</h6>
+                <p class="text-muted small mb-0">Your data and transactions are always protected with us.</p>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card h-100 p-4" style="border:none;background:var(--neutral-50);border-radius:var(--radius-lg)">
+                <i class="fas fa-shipping-fast fa-2x mb-3" style="color:var(--accent)"></i>
+                <h6 class="fw-bold">Fast Delivery</h6>
+                <p class="text-muted small mb-0">We ensure your orders reach you quickly and in perfect condition.</p>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card h-100 p-4" style="border:none;background:var(--neutral-50);border-radius:var(--radius-lg)">
+                <i class="fas fa-headset fa-2x mb-3" style="color:var(--accent)"></i>
+                <h6 class="fw-bold">24/7 Support</h6>
+                <p class="text-muted small mb-0">Our customer support team is always here to help you.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="text-center p-5" style="background:linear-gradient(135deg,var(--primary),var(--primary-light));border-radius:var(--radius-lg)">
+        <h4 style="font-family:var(--font-display);color:#fff" class="mb-3">Ready to Explore?</h4>
+        <p class="text-white-50 mb-4">Discover our curated collection of premium products.</p>
+        <a href="/Product" class="btn btn-light btn-lg"><i class="fas fa-shopping-bag me-2"></i>Shop Now</a>
+    </div>
+</div>

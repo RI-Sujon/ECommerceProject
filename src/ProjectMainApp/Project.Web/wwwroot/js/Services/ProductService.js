@@ -1,48 +1,60 @@
 const ProductService = {
-    baseUrl: 'https://localhost:7056/api/product',
+    baseUrl: 'https://localhost:7500/api/product',
 
     async getProductList(request) {
-        try {
-            const response = await $.ajax({
-                url: `${this.baseUrl}/get-product-list`,
-                method: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify(request),
-                headers: ServiceUtils.getHeaders(),
-            });
+        const response = await $.ajax({
+            url: `${this.baseUrl}/get-product-list`,
+            method: 'GET',
+            data: request,                       // jQuery serialises as query string
+            headers: ServiceUtils.getHeaders()
+        });
+        if (response.isSuccess) return response.data;
+        throw new Error(response.errorMessage || 'Failed to get products');
+    },
 
-            if (response.isSuccess) {
-                return response.data;
-            } else {
-                throw new Error(response.message || 'Failed to get products');
-            }
-        } catch (error) {
-            console.error('Error getting products:', error);
-            throw error;
-        }
+    async getProductById(id) {
+        const response = await $.ajax({
+            url: `${this.baseUrl}/${id}`,
+            method: 'GET',
+            headers: ServiceUtils.getHeaders()
+        });
+        if (response.isSuccess) return response.data;
+        throw new Error(response.errorMessage || 'Product not found');
     },
 
     async addProduct(product) {
-        try {
-            const response = await $.ajax({
-                url: `${this.baseUrl}/add-product`,
-                method: 'POST',
-                contentType: 'application/json',
-                headers: ServiceUtils.getHeaders(),
-                data: JSON.stringify(product)
-            });
+        const response = await $.ajax({
+            url: `${this.baseUrl}/add-product`,
+            method: 'POST',
+            contentType: 'application/json',
+            headers: ServiceUtils.getHeaders(),
+            data: JSON.stringify(product)
+        });
+        if (response.isSuccess) return response.data;
+        throw new Error(response.errorMessage || 'Failed to add product');
+    },
 
-            if (response.isSuccess) {
-                return response.data;
-            } else {
-                throw new Error(response.message || 'Failed to add product');
-            }
-        } catch (error) {
-            console.error('Error adding product:', error);
-            throw error;
-        }
+    async updateProduct(id, product) {
+        const response = await $.ajax({
+            url: `${this.baseUrl}/${id}`,
+            method: 'PUT',
+            contentType: 'application/json',
+            headers: ServiceUtils.getHeaders(),
+            data: JSON.stringify(product)
+        });
+        if (response.isSuccess) return response.data;
+        throw new Error(response.errorMessage || 'Failed to update product');
+    },
+
+    async deleteProduct(id) {
+        const response = await $.ajax({
+            url: `${this.baseUrl}/${id}`,
+            method: 'DELETE',
+            headers: ServiceUtils.getHeaders()
+        });
+        if (response.isSuccess) return true;
+        throw new Error(response.errorMessage || 'Failed to delete product');
     }
 };
 
-// Initialize the service
 window.ProductService = ProductService; 

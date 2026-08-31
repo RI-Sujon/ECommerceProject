@@ -1,0 +1,16 @@
+@page
+@model Project.Web.Pages.Product.DetailModel
+@{
+    ViewData["Title"] = "Product Detail";
+}
+
+<div class="container px-md-5 py-4">
+    <div id="product-detail-container" class="fade-in"></div>
+</div>
+
+@section Scripts {
+    <script src="~/js/Services/ProductService.js"></script>
+    <script src="~/js/Services/CartService.js"></script>
+    <script src="~/js/Components/product-admin-modal.js"></script>
+    <script src="~/js/Pages/product-detail-page.js"></script>
+}

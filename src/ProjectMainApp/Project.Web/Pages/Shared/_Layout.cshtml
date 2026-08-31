@@ -4,9 +4,19 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - E-Bazaar</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <script>
+        // Prevent dark mode flash — must run before body renders
+        (function () {
+            var saved = localStorage.getItem('darkMode') || 'light';
+            document.documentElement.setAttribute('data-bs-theme', saved);
+        })();
+    </script>
     @await RenderSectionAsync("Styles", required: false)
 </head>
 <body>
@@ -20,9 +30,57 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    <script src="~/js/Services/ServiceUtils.js"></script>
+    <script src="~/js/Components/toast.js"></script>
     <script src="~/js/Common.js"></script>
+    <script src="~/js/Services/ServiceUtils.js"></script>
+    <script src="~/js/Services/CategoryService.js"></script>
+    <script src="~/js/Services/OrderService.js"></script>
+    <script src="~/js/Services/AdminService.js"></script>
+    <script src="~/js/Services/UserService.js"></script>
+    <script src="~/js/Services/WishlistService.js"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
+
+    <footer class="site-footer">
+        <div class="container px-md-5">
+            <div class="row align-items-center">
+                <div class="col-md-4 mb-3 mb-md-0">
+                    <img src="/css/images/Original.png" height="32" alt="E-Bazaar">
+                    <p class="text-muted small mt-2 mb-0" style="font-family:var(--font-display);font-style:italic;letter-spacing:0.02em">
+                        Curated excellence, delivered.
+                    </p>
+                </div>
+                <div class="col-md-4 text-center mb-3 mb-md-0">
+                    <ul class="list-unstyled d-flex justify-content-center gap-4 mb-0">
+                        <li><a href="/Product" class="text-muted text-decoration-none small fw-medium">Products</a></li>
+                        <li id="footer-orders" class="d-none"><a href="/Order" class="text-muted text-decoration-none small fw-medium">My Orders</a></li>
+                        <li id="footer-profile" class="d-none"><a href="/Profile" class="text-muted text-decoration-none small fw-medium">Profile</a></li>
+                        <li id="footer-admin" class="d-none"><a href="/Admin" class="text-muted text-decoration-none small fw-medium">Admin</a></li>
+                        <li><a href="/About" class="text-muted text-decoration-none small fw-medium">About</a></li>
+                        <li><a href="/Contact" class="text-muted text-decoration-none small fw-medium">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <p class="text-muted small mb-0">&copy; 2026 E-Bazaar. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script>
+        // Show footer links based on auth state
+        (function () {
+            if (typeof Common === 'undefined') return;
+            if (Common.isLoggedIn()) {
+                const role = Common.getUserInfo().role;
+                document.getElementById('footer-profile').classList.remove('d-none');
+                if (role === 'Admin') {
+                    document.getElementById('footer-admin').classList.remove('d-none');
+                } else {
+                    document.getElementById('footer-orders').classList.remove('d-none');
+                }
+            }
+        })();
+    </script>
+
 </body>
 </html>

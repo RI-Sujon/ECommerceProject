@@ -1,0 +1,15 @@
+@page
+@model Project.Web.Pages.Order.DetailModel
+@{
+    ViewData["Title"] = "Order Detail";
+}
+
+<div class="container px-md-5 py-4">
+    <h3 class="page-title"><i class="fas fa-receipt"></i>Order Detail</h3>
+    <div id="order-detail-container"></div>
+</div>
+
+@section Scripts {
+    <script src="~/js/Services/OrderService.js"></script>
+    <script src="~/js/Pages/order-detail-page.js"></script>
+}

@@ -7,27 +7,26 @@ class ProductHomePage {
         this.totalCount = 0;
         this.pageSizeOptions = [8, 16, 24, 32];
         this.searchText = '';
+        this.categoryId = null;
+        this.sortBy = '';
         this.cartItems = [];
     }
 
     async initialize() {
         try {
-            // Render top cards first
-            //this.renderTopCards();
-            
             const request = {
                 page: this.currentPage,
                 pageSize: this.pageSize,
                 searchText: this.searchText,
+                categoryId: this.categoryId,
+                sortBy: this.sortBy,
                 minPrice: null,
                 maxPrice: null
             };
             const result = await ProductService.getProductList(request);
             this.totalCount = result.totalCount;
-            
             this.cartItems = Common.getCartItems();
-            this.changeCountQtyValue(this.cartItems, result.products)
-
+            this.changeCountQtyValue(this.cartItems, result.products);
             this.renderProducts(result.products, result.page, result.totalCount);
         } catch (error) {
             console.error('Error initializing product page:', error);
@@ -60,17 +59,20 @@ class ProductHomePage {
     }
 
     async fetchAndRenderProducts() {
+        this.showLoading();
         try {
             const request = {
                 page: this.currentPage,
                 pageSize: this.pageSize,
                 searchText: this.searchText,
+                categoryId: this.categoryId,
+                sortBy: this.sortBy,
                 minPrice: null,
                 maxPrice: null
             };
             const result = await ProductService.getProductList(request);
-
-            this.changeCountQtyValue(this.cartItems, result.products)
+            this.totalCount = result.totalCount;
+            this.changeCountQtyValue(this.cartItems, result.products);
             this.renderProducts(result.products, result.page, result.totalCount);
         } catch (error) {
             console.error('Error fetching products:', error);
@@ -103,7 +105,7 @@ class ProductHomePage {
             endItemNo = totalCount;
         }
 
-        var headInfo = '<div class="px-5 py-2"><h5>Showing ' + startItemNo + '-' + endItemNo + ' of ' + totalCount + ' results</h5></div>';
+        var headInfo = '<div class="px-5 py-2"><p class="results-count mb-0">Showing <span>' + startItemNo + '–' + endItemNo + '</span> of <span>' + totalCount + '</span> results</p></div>';
 
         this.productContainer.append(headInfo);
 
@@ -222,6 +224,21 @@ class ProductHomePage {
         $("#topCardsContainer").append($topCardsContainer);
     }
 
+    showLoading() {
+        const skeletonCard = `
+            <div class="col-md-3 mb-4" style="padding:8px">
+                <div class="card p-0 placeholder-glow" style="border-radius:var(--radius-lg);overflow:hidden">
+                    <div class="placeholder col-12" style="height:180px;border-radius:0"></div>
+                    <div style="padding:0.85rem 1rem">
+                        <div class="placeholder col-8 mb-2" style="height:1rem"></div>
+                        <div class="placeholder col-5 mb-3" style="height:0.8rem"></div>
+                        <div class="placeholder col-4" style="height:1.2rem"></div>
+                    </div>
+                </div>
+            </div>`;
+        this.productContainer.html(`<div class="px-5"><div class="row">${skeletonCard.repeat(8)}</div></div>`);
+    }
+
     showError(message) {
         if (this.productContainer.length) {
             this.productContainer.html(`
@@ -234,69 +251,123 @@ class ProductHomePage {
 }
 
 // Initialize the page when the DOM is loaded
-$(document).ready(() => {
-    const productPage = new ProductHomePage();
-    productPage.renderTopCards();
+$(document).ready(async () => {
+    window.productPage = new ProductHomePage();
     productPage.initialize();
 
-    // Search functionality
-    $('.search-input').on('keypress', function(e) {
-        if (e.which === 13) { // Enter key
-            e.preventDefault();
-            productPage.handleSearch();
-        }
+    // Role-based admin UI
+    const _isAdmin = Common.getUserInfo().role === 'Admin';
+    if (_isAdmin) {
+        $('#admin-add-product-col').removeClass('d-none');
+    }
+
+    // Load categories into the filter dropdown
+    try {
+        const categories = await CategoryService.getCategories();
+        const $filter = $('#categoryFilter');
+        categories.forEach(cat => {
+            $filter.append(`<option value="${cat.id}">${cat.name}</option>`);
+        });
+        $filter.on('change', () => {
+            productPage.categoryId = $filter.val() ? parseInt($filter.val()) : null;
+            productPage.currentPage = 1;
+            productPage.fetchAndRenderProducts();
+        });
+    } catch (e) {
+        console.warn('Could not load categories:', e);
+    }
+
+    // Sort
+    $('#sortFilter').on('change', function () {
+        productPage.sortBy = $(this).val() || '';
+        productPage.currentPage = 1;
+        productPage.fetchAndRenderProducts();
     });
 
-    $('.search-icon').on('click', function() {
-        productPage.handleSearch();
+    // Search autocomplete
+    let _acTimer = null;
+    const $acInput = $('.search-input');
+    const $acDrop = $('<div>').css({
+        position: 'absolute', top: '100%', left: 0, right: 0,
+        background: 'var(--bs-body-bg, #fff)', border: '1px solid #ddd',
+        borderRadius: '0 0 8px 8px', boxShadow: '0 4px 12px rgba(0,0,0,.12)',
+        zIndex: 1050, maxHeight: '280px', overflowY: 'auto', display: 'none'
+    });
+    $('.search-container').css('position', 'relative').append($acDrop);
+
+    $acInput.on('input', function () {
+        clearTimeout(_acTimer);
+        const val = $(this).val().trim();
+        if (val.length < 2) { $acDrop.hide(); return; }
+        _acTimer = setTimeout(async () => {
+            try {
+                const r = await ProductService.getProductList({ searchText: val, page: 1, pageSize: 6 });
+                if (!r.products.length) { $acDrop.hide(); return; }
+                $acDrop.html(r.products.map(p => `
+                    <div class="ac-item d-flex justify-content-between align-items-center px-3 py-2"
+                         style="cursor:pointer;border-bottom:1px solid rgba(0,0,0,.05)"
+                         data-id="${p.id}" data-name="${p.name.replace(/"/g, '&quot;')}">
+                        <span class="fw-semibold small">${p.name}</span>
+                        <span class="text-muted small ms-2">$${p.price.toFixed(2)}</span>
+                    </div>`).join('')).show();
+            } catch { $acDrop.hide(); }
+        }, 300);
     });
 
-    // Generate Slug functionality
-    $('#generateSlugBtn').on('click', function() {
-        const productName = $('#productName').val();
-        if (productName) {
-            const slug = productName
-                .toLowerCase()
-                .replace(/[^a-z0-9]+/g, '-') // Replace any non-alphanumeric characters with hyphens
-                .replace(/^-+|-+$/g, ''); // Remove leading and trailing hyphens
-            $('#productSlug').val(slug);
-        }
+    $acDrop.on('mouseenter', '.ac-item', function () { $(this).addClass('bg-light'); })
+           .on('mouseleave', '.ac-item', function () { $(this).removeClass('bg-light'); })
+           .on('click', '.ac-item', function () {
+               $acInput.val($(this).data('name'));
+               $acDrop.hide();
+               productPage.handleSearch();
+           });
+
+    $(document).on('click', e => {
+        if (!$(e.target).closest('.search-container').length) $acDrop.hide();
     });
 
-    // Auto-generate slug when product name changes
-    $('#productName').on('input', function() {
-        if ($('#productSlug').val() === '') {
-            const productName = $(this).val();
-            if (productName) {
-                const slug = productName
-                    .toLowerCase()
-                    .replace(/[^a-z0-9]+/g, '-')
-                    .replace(/^-+|-+$/g, '');
-                $('#productSlug').val(slug);
-            }
-        }
+    $acInput.on('keydown', e => { if (e.key === 'Escape') $acDrop.hide(); });
+
+    // Search
+    $('.search-input').on('keypress', function (e) {
+        if (e.which === 13) { e.preventDefault(); productPage.handleSearch(); }
+    });
+    $('.search-icon').on('click', () => productPage.handleSearch());
+
+    // ── Admin product management ─────────────────────────────────────────────
+    // Open Add Product modal
+    $(document).on('click', '.admin-add-product-btn', () => ProductAdminModal.openAdd());
+
+    // Edit product — delegated (card buttons)
+    $(document).on('click', '.admin-edit-btn', function () {
+        const product = JSON.parse($(this).attr('data-product'));
+        ProductAdminModal.openEdit(product);
     });
 
-    // Add Product Form Handler
-    $('#saveProductBtn').on('click', async function() {
-        const productData = {
-            name: $('#productName').val(),
-            slug: $('#productSlug').val(),
-            price: parseFloat($('#productPrice').val()),
-            discountStartDate: $('#discountStart').val() ? new Date($('#discountStart').val()).toISOString() : null,
-            discountEndDate: $('#discountEnd').val() ? new Date($('#discountEnd').val()).toISOString() : null
-        };
-
+    // Delete product — delegated (card buttons)
+    $(document).on('click', '.admin-delete-btn', async function () {
+        const $btn = $(this);
+        const id = parseInt($btn.data('productId'));
+        const name = $btn.data('productName');
+        if (!confirm(`Delete "${name}"?\n\nThis cannot be undone.`)) return;
+        $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i>');
         try {
-            await ProductService.addProduct(productData);
-            $('#addProductModal').modal('hide');
-            $('#addProductForm')[0].reset();
-            
-            productPage.initialize();
-            
-        } catch (error) {
-            alert('Error adding product. Please try again.');
-            console.error('Error:', error);
+            await ProductService.deleteProduct(id);
+            Toast.success(`"${name}" deleted.`);
+            await productPage.fetchAndRenderProducts();
+        } catch (e) {
+            Toast.error(e.message || 'Failed to delete product.');
+            $btn.prop('disabled', false).html('<i class="fas fa-trash"></i> Delete');
         }
+    });
+
+    // ── Wishlist toggle ──────────────────────────────────────────────────────
+    $(document).on('click', '.wishlist-toggle-btn', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const product = JSON.parse($(this).attr('data-product-json'));
+        const added = WishlistService.toggle(product);
+        $(this).css('color', added ? 'var(--danger)' : 'var(--neutral-400)');
+        Toast.info(added ? `"${product.name}" added to wishlist` : `Removed from wishlist`);
     });
 }); 

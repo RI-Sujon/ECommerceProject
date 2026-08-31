@@ -1,0 +1,114 @@
+@page
+@model Project.Web.Pages.Auth.RegisterModel
+@{
+    ViewData["Title"] = "Register";
+    Layout = "_AuthLayout";
+}
+
+<div class="auth-wrapper">
+    <div class="auth-card">
+        <div class="auth-logo mb-4">
+            <img src="~/css/images/Original.png" alt="E-Bazaar" style="height:48px">
+        </div>
+        <h2 class="auth-title">Create an Account</h2>
+        <p class="auth-subtitle">Start your journey with E-Bazaar</p>
+
+        <div id="auth-error" class="alert alert-danger d-none"></div>
+
+        <form id="registerForm">
+            <div class="mb-3">
+                <label class="form-label" style="font-weight:600;text-transform:uppercase;font-size:0.72rem;letter-spacing:0.05em">Full Name</label>
+                <input type="text" id="regFullName" class="form-control" placeholder="John Doe" required autofocus>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" style="font-weight:600;text-transform:uppercase;font-size:0.72rem;letter-spacing:0.05em">Email</label>
+                <input type="email" id="regEmail" class="form-control" placeholder="you@example.com" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" style="font-weight:600;text-transform:uppercase;font-size:0.72rem;letter-spacing:0.05em">Password <small class="text-muted" style="text-transform:none;letter-spacing:0">(min 8 chars, uppercase, digit, symbol)</small></label>
+                <div class="input-group">
+                    <input type="password" id="regPassword" class="form-control" placeholder="••••••••" required minlength="8">
+                    <button class="btn btn-outline-secondary" type="button" id="toggleRegPwd" tabindex="-1">
+                        <i class="fas fa-eye" id="regPwdIcon"></i>
+                    </button>
+                </div>
+                <div class="mt-1" id="pwd-strength-bar" style="height:4px;border-radius:2px;background:#e5e9eb;overflow:hidden">
+                    <div id="pwd-strength-fill" style="height:100%;width:0;transition:width .3s,background .3s"></div>
+                </div>
+                <small id="pwd-strength-label" class="text-muted"></small>
+            </div>
+            <div class="mb-4">
+                <label class="form-label" style="font-weight:600;text-transform:uppercase;font-size:0.72rem;letter-spacing:0.05em">Confirm Password</label>
+                <input type="password" id="regConfirmPassword" class="form-control" placeholder="••••••••" required>
+                <div class="invalid-feedback" id="pwd-match-error">Passwords do not match.</div>
+            </div>
+            <button type="submit" id="registerBtn" class="btn btn-primary w-100" style="height:44px;font-weight:600;font-size:0.9rem">Create Account</button>
+        </form>
+
+        <p class="text-center mt-3 text-muted">
+            Already have an account? <a href="/Auth/Login">Sign in</a>
+        </p>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/Services/AuthService.js"></script>
+    <script>
+        // Show / hide password
+        $('#toggleRegPwd').on('click', function () {
+            const $pwd = $('#regPassword');
+            const isText = $pwd.attr('type') === 'text';
+            $pwd.attr('type', isText ? 'password' : 'text');
+            $('#regPwdIcon').toggleClass('fa-eye fa-eye-slash');
+        });
+
+        // Password strength meter
+        $('#regPassword').on('input', function () {
+            const val = $(this).val();
+            const checks = [
+                val.length >= 8,
+                /[A-Z]/.test(val),
+                /[0-9]/.test(val),
+                /[^A-Za-z0-9]/.test(val)
+            ];
+            const score = checks.filter(Boolean).length;
+            const colors = ['', '#e53935', '#fb8c00', '#fdd835', '#43a047'];
+            const labels = ['', 'Weak', 'Fair', 'Good', 'Strong'];
+            const pct    = score * 25;
+            $('#pwd-strength-fill').css({ width: pct + '%', background: colors[score] });
+            $('#pwd-strength-label').text(score > 0 ? labels[score] : '').css('color', colors[score]);
+        });
+
+        // Confirm password match
+        function passwordsMatch() {
+            const match = $('#regPassword').val() === $('#regConfirmPassword').val();
+            $('#regConfirmPassword').toggleClass('is-invalid', !match && $('#regConfirmPassword').val().length > 0);
+            return match;
+        }
+        $('#regConfirmPassword').on('input', passwordsMatch);
+
+        $('#registerForm').on('submit', async function (e) {
+            e.preventDefault();
+            if (!passwordsMatch()) return;
+            const $btn = $('#registerBtn');
+            const $err = $('#auth-error');
+            $btn.prop('disabled', true).text('Creating account...');
+            $err.addClass('d-none');
+            try {
+                await AuthService.register(
+                    $('#regEmail').val(),
+                    $('#regPassword').val(),
+                    $('#regFullName').val()
+                );
+                window.location.href = '/Product';
+            } catch (ex) {
+                $err.removeClass('d-none').text(ex.responseJSON?.errorMessage || ex.message || 'Registration failed');
+            } finally {
+                $btn.prop('disabled', false).text('Create account');
+            }
+        });
+    </script>
+}
+        });
+    </script>
+}

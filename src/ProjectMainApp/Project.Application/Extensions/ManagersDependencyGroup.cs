@@ -17,6 +17,11 @@ public static class ManagersDependencyGroup
         //Services
         services.AddTransient<IProductService, ProductService>();
         services.AddTransient<ICartService, CartService>();
+        services.AddTransient<IAuthService, AuthService>();
+        services.AddTransient<ICategoryService, CategoryService>();
+        services.AddTransient<IOrderService, OrderService>();
+        services.AddTransient<IAdminService, AdminService>();
+        services.AddTransient<IUserService, UserService>();
         
         //Data Providers
         services.AddTransient<IProductProvider, ProductProvider>();
@@ -24,7 +29,10 @@ public static class ManagersDependencyGroup
 
         //Data Command
         services.AddTransient<AddProductCommand>();
+        services.AddTransient<UpdateProductCommand>();
+        services.AddTransient<DeleteProductCommand>();
         services.AddTransient<GetProductListQuery>();
+        services.AddTransient<GetProductByIdQuery>();
         services.AddTransient<AddItemToCartCommand>();
         services.AddTransient<RemoveItemFromCartCommand>();
         services.AddTransient<GetCartQuery>();

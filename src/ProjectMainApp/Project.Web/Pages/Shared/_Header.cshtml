@@ -1,15 +1,96 @@
 ﻿<header class="main-header">
     <div class="container">
         <div class="d-flex justify-content-between align-items-center h-100 px-5">
-            <a class="navbar-brand d-flex align-items-center" asp-area="" asp-page="/Index">
+            <a class="navbar-brand d-flex align-items-center" asp-area="" asp-page="/Product/Index">
                 <img src="~/css/images/Original.png" alt="Logo" class="logo-image">
             </a>
-            <div class="cart-icon">
-                <div id="cart-icon-btn" class="btn btn-link has-items">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span class="cart-count">Cart (0)</span>
+
+            <div class="d-flex align-items-center gap-3">
+                <!-- Auth nav (rendered by JS after checking JWT) -->
+                <div id="nav-auth" class="d-flex align-items-center gap-3">
+                    <a href="/Auth/Login" id="nav-login" class="btn btn-sm btn-outline-primary d-none">Login</a>
+                    <a href="/Auth/Register" id="nav-register" class="btn btn-sm btn-primary d-none">Register</a>
+                    <span id="nav-user" class="text-muted small d-none"></span>
+                    <a href="/Order" id="nav-orders" class="btn btn-sm btn-outline-secondary d-none">
+                        <i class="fas fa-box me-1"></i>My Orders
+                    </a>
+                    <a href="/Profile" id="nav-profile" class="btn btn-sm btn-outline-secondary d-none">
+                        <i class="fas fa-user me-1"></i>Profile
+                    </a>
+                    <a href="/Admin" id="nav-admin" class="btn btn-sm btn-outline-warning d-none">
+                        <i class="fas fa-cog me-1"></i>Admin
+                    </a>
+                    <button id="nav-logout" class="btn btn-sm btn-outline-danger d-none" onclick="Common.logout()">
+                        Logout
+                    </button>
+                </div>
+
+                <!-- Dark mode toggle -->
+                <button id="dark-mode-toggle" class="btn btn-sm btn-outline-secondary"
+                        title="Toggle dark mode" onclick="toggleDarkMode()">
+                    <i id="dark-mode-icon" class="fas fa-moon"></i>
+                </button>
+
+                <div id="cart-icon-wrapper" class="cart-icon">
+                    <a href="/Wishlist" id="wishlist-icon-btn" class="btn btn-link position-relative d-none" title="My Wishlist" style="text-decoration:none">
+                        <i class="fas fa-heart fs-5"></i>
+                        <span class="wishlist-count" style="position:absolute;top:0;right:0;background:var(--danger);color:#fff;border-radius:50%;width:18px;height:18px;font-size:0.65rem;display:flex;align-items:center;justify-content:center;font-weight:700">0</span>
+                    </a>
+                    <div id="cart-icon-btn" class="btn btn-link position-relative" title="Shopping Cart">
+                        <i class="fas fa-shopping-cart fs-5"></i>
+                        <span class="cart-count">0</span>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </header>
+
+<script>
+    function toggleDarkMode() {
+        const html = document.documentElement;
+        const isDark = html.getAttribute('data-bs-theme') === 'dark';
+        const next = isDark ? 'light' : 'dark';
+        html.setAttribute('data-bs-theme', next);
+        localStorage.setItem('darkMode', next);
+        document.getElementById('dark-mode-icon').className = isDark ? 'fas fa-moon' : 'fas fa-sun';
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        // Sync icon with current theme
+        if (document.documentElement.getAttribute('data-bs-theme') === 'dark') {
+            const icon = document.getElementById('dark-mode-icon');
+            if (icon) icon.className = 'fas fa-sun';
+        }
+
+        // Auth nav
+        if (Common.isLoggedIn()) {
+            const info = Common.getUserInfo();
+            document.getElementById('nav-user').textContent = info.fullName || info.username;
+            document.getElementById('nav-user').classList.remove('d-none');
+            document.getElementById('nav-profile').classList.remove('d-none');
+            document.getElementById('nav-logout').classList.remove('d-none');
+            if (info.role === 'Admin') {
+                document.getElementById('nav-admin').classList.remove('d-none');
+                // Admin manages orders via /Admin — hide shopping UI
+                document.getElementById('cart-icon-wrapper').classList.add('d-none');
+            } else {
+                document.getElementById('nav-orders').classList.remove('d-none');
+                // Show wishlist icon for customers
+                const wlBtn = document.getElementById('wishlist-icon-btn');
+                if (wlBtn) {
+                    wlBtn.classList.remove('d-none');
+                    const wlCount = wlBtn.querySelector('.wishlist-count');
+                    if (wlCount && typeof WishlistService !== 'undefined') {
+                        const c = WishlistService.count();
+                        wlCount.textContent = c;
+                        wlCount.style.display = c > 0 ? 'flex' : 'none';
+                    }
+                }
+            }
+        } else {
+            document.getElementById('nav-login').classList.remove('d-none');
+            document.getElementById('nav-register').classList.remove('d-none');
+        }
+    });
+</script>

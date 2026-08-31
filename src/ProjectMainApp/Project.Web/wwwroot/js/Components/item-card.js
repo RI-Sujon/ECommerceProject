@@ -17,16 +17,71 @@ class ItemCard {
         const discountedPrice = isDiscountActive ? 
             originalPrice * 0.75 : // 25% discount
             originalPrice;
+
+        // Determine role-based action buttons
+        const userInfo = Common.getUserInfo();
+        const isAdmin = userInfo.role === 'Admin';
+        const isLoggedIn = Common.isLoggedIn();
+        const productJson = JSON.stringify(this.product).replace(/"/g, '&quot;');
+
+        let actionsHtml;
+        if (isAdmin) {
+            actionsHtml = `
+                <div class="d-flex gap-2">
+                    <button class="btn btn-sm btn-outline-primary admin-edit-btn"
+                            data-product="${productJson}">
+                        <i class="fas fa-edit"></i> Edit
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger admin-delete-btn"
+                            data-product-id="${this.product.id}"
+                            data-product-name="${this.product.name.replace(/"/g, '&quot;')}">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                </div>`;
+        } else if (!isLoggedIn) {
+            actionsHtml = `
+                <div class="cart-controls">
+                    <a href="/Auth/Login" class="btn btn-sm add-to-cart-btn">
+                        <i class="fas fa-lock me-1"></i>Login to Buy
+                    </a>
+                </div>`;
+        } else {
+            actionsHtml = `
+                <div class="quantity-controls ${this.product.selectedQty ? '' : 'd-none'}">
+                    <span class="quantity-btn" onclick="decreaseQuantity(${productJson}, this)">-</span>
+                    <span class="quantity-value">${this.product.selectedQty ? this.product.selectedQty : 1}</span>
+                    <span class="quantity-btn" onclick="increaseQuantity(${productJson}, this)">+</span>
+                </div>
+                <div class="cart-controls ${this.product.selectedQty ? 'd-none' : ''}">
+                    <button class="btn btn-sm add-to-cart-btn" onclick="addToCart(${productJson}, this)">
+                        Add to Cart
+                    </button>
+                </div>`;
+        }
         
+        // Wishlist check
+        const isWished = typeof WishlistService !== 'undefined' && WishlistService.isInWishlist(this.product.id);
+
         $card.html(`
-            <div class="card h-100 product-card px-4">
-                <div class="position-relative p-3">
+            <div class="card h-100 product-card">
+                <div class="position-relative" style="overflow:hidden;border-radius:var(--radius-lg) var(--radius-lg) 0 0">
                     <img src="${this.product.imageUrl ? this.product.imageUrl : '/css/images/dummy.png'}"
                          class="card-img-top product-image" 
-                         alt="${this.product.name}">
+                         alt="${this.product.name}"
+                         style="border-radius:0">
+                    ${isDiscountActive ? '<span class="badge badge-discount position-absolute top-0 start-0 m-2"><i class="fas fa-bolt me-1"></i>25% OFF</span>' : ''}
+                    ${this.product.stock === 0 ? '<span class="badge bg-danger position-absolute top-0 end-0 m-2">Out of Stock</span>' : ''}
+                    ${!isAdmin ? `<button class="btn btn-sm wishlist-toggle-btn position-absolute m-2"
+                            data-product-json="${productJson}"
+                            style="top:0;${this.product.stock === 0 ? 'right:90px' : 'right:0'};width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,0.9);border:none;color:${isWished ? 'var(--danger)' : 'var(--neutral-400)'};box-shadow:var(--shadow-sm);transition:all 0.25s;z-index:2">
+                        <i class="fas fa-heart"></i>
+                    </button>` : ''}
                 </div>
                 <div class="card-body">
                     <h5 class="card-title product-name text-truncate">${this.product.name}</h5>
+                    <a href="/Product/Detail?id=${this.product.id}" class="btn btn-link p-0 small text-decoration-none mb-2 d-block" style="color:var(--accent-dark);font-weight:500">
+                        <i class="fas fa-eye me-1"></i>View Details
+                    </a>
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <div>
                             <span class="h5 mb-0 product-price">$${discountedPrice.toFixed(2)}</span>
@@ -36,16 +91,7 @@ class ItemCard {
                         </div>
                     </div>
                     <div class="d-flex justify-content-between align-items-center">
-                        <div class="quantity-controls ${this.product.selectedQty ? '' : 'd-none'}">
-                            <span class="quantity-btn" onclick="decreaseQuantity(${JSON.stringify(this.product).replace(/"/g, '&quot;')}, this)">-</span>
-                            <span class="quantity-value">${this.product.selectedQty ? this.product.selectedQty : 1 }</span>
-                            <span class="quantity-btn" onclick="increaseQuantity(${JSON.stringify(this.product).replace(/"/g, '&quot;')} , this)">+</span>
-                        </div>
-                        <div class="cart-controls ${this.product.selectedQty ? 'd-none' : ''}">
-                            <button class="btn btn-sm add-to-cart-btn" onclick="addToCart(${JSON.stringify(this.product).replace(/"/g, '&quot;')}, this)">
-                                Add to Cart
-                            </button>
-                        </div>
+                        ${actionsHtml}
                     </div>
                 </div>
             </div>
@@ -69,7 +115,7 @@ async function increaseQuantity(product, button) {
         await window.cart.loadCartItems();
     } catch (error) {
         console.error('Error increasing quantity:', error);
-        alert('Failed to update quantity. Please try again.');
+        Toast.error('Failed to update quantity. Please try again.');
     }
 }
 
@@ -88,7 +134,7 @@ async function decreaseQuantity(product, button) {
             await window.cart.loadCartItems();
         } catch (error) {
             console.error('Error decreasing quantity:', error);
-            alert('Failed to update quantity. Please try again.');
+            Toast.error('Failed to update quantity. Please try again.');
         }
     } else {
         try {
@@ -100,7 +146,7 @@ async function decreaseQuantity(product, button) {
             await window.cart.loadCartItems();
         } catch (error) {
             console.error('Error removing item from cart:', error);
-            alert('Failed to remove item. Please try again.');
+            Toast.error('Failed to remove item. Please try again.');
         }
     }
 }
@@ -119,7 +165,7 @@ async function addToCart(product, button) {
         await window.cart.loadCartItems();
     } catch (error) {
         console.error('Error adding to cart:', error);
-        alert('Failed to add item to cart. Please try again.');
+        Toast.error('Failed to add item to cart. Please try again.');
     }
 }
 

@@ -1,0 +1,15 @@
+@page
+@model Project.Web.Pages.Order.IndexModel
+@{
+    ViewData["Title"] = "My Orders";
+}
+
+<div class="container px-md-5 py-4">
+    <h3 class="page-title"><i class="fas fa-box"></i>My Orders</h3>
+    <div id="order-container"></div>
+</div>
+
+@section Scripts {
+    <script src="~/js/Services/OrderService.js"></script>
+    <script src="~/js/Pages/order-history-page.js"></script>
+}

@@ -1,0 +1,134 @@
+@page
+@model Project.Web.Pages.ContactModel
+@{
+    ViewData["Title"] = "Contact Us";
+}
+
+<div class="container px-md-5 py-5 fade-in">
+    <h2 class="page-title"><i class="fas fa-envelope"></i>Contact Us</h2>
+
+    <div class="row">
+        <!-- Contact Form -->
+        <div class="col-md-7 mb-4">
+            <div class="card p-4" style="border:none;background:var(--neutral-50);border-radius:var(--radius-lg)">
+                <h5 style="font-family:var(--font-display);color:var(--primary)" class="mb-3">Send us a message</h5>
+                <form id="contactForm">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label small fw-semibold">First Name</label>
+                            <input type="text" class="form-control" id="contactFirstName" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label small fw-semibold">Last Name</label>
+                            <input type="text" class="form-control" id="contactLastName" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold">Email</label>
+                        <input type="email" class="form-control" id="contactEmail" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold">Subject</label>
+                        <select class="form-select" id="contactSubject">
+                            <option value="general">General Inquiry</option>
+                            <option value="order">Order Support</option>
+                            <option value="returns">Returns & Refunds</option>
+                            <option value="feedback">Feedback</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold">Message</label>
+                        <textarea class="form-control" id="contactMessage" rows="5" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane me-2"></i>Send Message</button>
+                </form>
+                <div id="contactSuccess" class="alert alert-success mt-3 d-none">
+                    <i class="fas fa-check-circle me-2"></i>Thank you! Your message has been sent. We'll get back to you soon.
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Info -->
+        <div class="col-md-5">
+            <div class="card p-4 mb-3" style="border:none;background:var(--neutral-50);border-radius:var(--radius-lg)">
+                <h5 style="font-family:var(--font-display);color:var(--primary)" class="mb-3">Get in Touch</h5>
+                <div class="d-flex align-items-start mb-3">
+                    <i class="fas fa-map-marker-alt mt-1 me-3" style="color:var(--accent);width:20px"></i>
+                    <div>
+                        <h6 class="mb-1 fw-bold small">Address</h6>
+                        <p class="text-muted small mb-0">123 Commerce Street<br>Business District, BD 10001</p>
+                    </div>
+                </div>
+                <div class="d-flex align-items-start mb-3">
+                    <i class="fas fa-phone mt-1 me-3" style="color:var(--accent);width:20px"></i>
+                    <div>
+                        <h6 class="mb-1 fw-bold small">Phone</h6>
+                        <p class="text-muted small mb-0">+1 (555) 123-4567</p>
+                    </div>
+                </div>
+                <div class="d-flex align-items-start mb-3">
+                    <i class="fas fa-envelope mt-1 me-3" style="color:var(--accent);width:20px"></i>
+                    <div>
+                        <h6 class="mb-1 fw-bold small">Email</h6>
+                        <p class="text-muted small mb-0">support&#64;ebazaar.com</p>
+                    </div>
+                </div>
+                <div class="d-flex align-items-start">
+                    <i class="fas fa-clock mt-1 me-3" style="color:var(--accent);width:20px"></i>
+                    <div>
+                        <h6 class="mb-1 fw-bold small">Business Hours</h6>
+                        <p class="text-muted small mb-0">Mon – Fri: 9:00 AM – 6:00 PM<br>Sat – Sun: 10:00 AM – 4:00 PM</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Social Links -->
+            <div class="card p-4" style="border:none;background:var(--neutral-50);border-radius:var(--radius-lg)">
+                <h6 class="fw-bold mb-3">Follow Us</h6>
+                <div class="d-flex gap-3">
+                    <span class="d-flex align-items-center justify-content-center" style="width:40px;height:40px;border-radius:50%;background:var(--primary);color:#fff;cursor:pointer">
+                        <i class="fab fa-facebook-f"></i>
+                    </span>
+                    <span class="d-flex align-items-center justify-content-center" style="width:40px;height:40px;border-radius:50%;background:var(--primary);color:#fff;cursor:pointer">
+                        <i class="fab fa-twitter"></i>
+                    </span>
+                    <span class="d-flex align-items-center justify-content-center" style="width:40px;height:40px;border-radius:50%;background:var(--primary);color:#fff;cursor:pointer">
+                        <i class="fab fa-instagram"></i>
+                    </span>
+                    <span class="d-flex align-items-center justify-content-center" style="width:40px;height:40px;border-radius:50%;background:var(--primary);color:#fff;cursor:pointer">
+                        <i class="fab fa-linkedin-in"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    $(document).ready(function () {
+        // Pre-fill email if logged in
+        if (typeof Common !== 'undefined' && Common.isLoggedIn()) {
+            const info = Common.getUserInfo();
+            if (info.email) $('#contactEmail').val(info.email);
+            if (info.fullName) {
+                const parts = info.fullName.split(' ');
+                $('#contactFirstName').val(parts[0] || '');
+                $('#contactLastName').val(parts.slice(1).join(' ') || '');
+            }
+        }
+
+        $('#contactForm').on('submit', function (e) {
+            e.preventDefault();
+            const $btn = $(this).find('button[type="submit"]');
+            $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-2"></i>Sending...');
+            // Simulate send (no backend endpoint)
+            setTimeout(() => {
+                $(this).addClass('d-none');
+                $('#contactSuccess').removeClass('d-none');
+            }, 1200);
+        });
+    });
+</script>
+}

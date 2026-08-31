@@ -1,5 +1,5 @@
 const CartService = {
-    baseUrl: 'https://localhost:7056/api/Cart',
+    baseUrl: 'https://localhost:7500/api/Cart',
 
     async addItemToCart(productId, quantity) {
         try {

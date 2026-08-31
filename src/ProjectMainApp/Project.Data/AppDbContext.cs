@@ -16,6 +16,13 @@ public class AppDbContext : DbContext
         builder.Entity<ProductEntity>(entity =>
         {
             entity.HasKey(e => e.Id);
+            entity.HasOne<CategoryEntity>()
+                  .WithMany()
+                  .HasForeignKey(e => e.CategoryId)
+                  .IsRequired(false);
+            entity.HasIndex(e => e.Slug);
+            entity.HasIndex(e => e.CategoryId);
+            entity.HasIndex(e => e.IsActive);
         });
 
         // Configure Cart entity
@@ -26,9 +33,37 @@ public class AppDbContext : DbContext
                   .WithMany()
                   .HasForeignKey(e => e.ProductId);
         });
+
+        // Configure User entity
+        builder.Entity<UserEntity>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.HasIndex(e => e.Email).IsUnique();
+        });
+
+        // Configure Order entity
+        builder.Entity<OrderEntity>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.HasIndex(e => e.UserId);
+            entity.HasIndex(e => e.Status);
+        });
+
+        // Configure OrderItem entity
+        builder.Entity<OrderItemEntity>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.HasOne<OrderEntity>()
+                  .WithMany()
+                  .HasForeignKey(e => e.OrderId);
+        });
     }
 
     // You can add other DbSets here
     public DbSet<ProductEntity> Products { get; set; }
     public DbSet<CartEntity> Carts { get; set; }
+    public DbSet<UserEntity> Users { get; set; }
+    public DbSet<CategoryEntity> Categories { get; set; }
+    public DbSet<OrderEntity> Orders { get; set; }
+    public DbSet<OrderItemEntity> OrderItems { get; set; }
 }

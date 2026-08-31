@@ -1,0 +1,17 @@
+@page
+@model Project.Web.Pages.WishlistModel
+@{
+    ViewData["Title"] = "My Wishlist";
+}
+
+<div class="container px-md-5 py-4">
+    <h3 class="page-title"><i class="fas fa-heart"></i>My Wishlist</h3>
+    <div id="wishlist-container">
+        <div class="text-center py-5"><i class="fas fa-spinner fa-spin fa-2x" style="color:var(--accent)"></i></div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/Services/WishlistService.js"></script>
+    <script src="~/js/Pages/wishlist-page.js"></script>
+}

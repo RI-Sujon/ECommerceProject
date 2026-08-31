@@ -1,0 +1,15 @@
+@page
+@model Project.Web.Pages.Order.ConfirmationModel
+@{
+    ViewData["Title"] = "Order Confirmed";
+}
+
+<div class="container px-md-5 py-4">
+    <div id="confirmation-container">
+        <div class="text-center py-5"><i class="fas fa-spinner fa-spin fa-2x" style="color:var(--accent)"></i></div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/Pages/confirmation-page.js"></script>
+}

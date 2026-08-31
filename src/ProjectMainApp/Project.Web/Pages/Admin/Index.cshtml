@@ -1,0 +1,19 @@
+@page
+@model Project.Web.Pages.Admin.IndexModel
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="container px-md-5 py-4">
+    <h3 class="page-title"><i class="fas fa-cog"></i>Admin Dashboard</h3>
+    <div id="stats-container">
+        <div class="text-center py-4"><i class="fas fa-spinner fa-spin fa-2x" style="color:var(--accent)"></i></div>
+    </div>
+    <h5 class="page-title" style="font-size:1.2rem;margin-top:1rem"><i class="fas fa-clipboard-list"></i>Order Management</h5>
+    <div id="orders-container"></div>
+</div>
+
+@section Scripts {
+    <script src="~/js/Services/AdminService.js"></script>
+    <script src="~/js/Pages/admin-page.js"></script>
+}

@@ -1,12 +1,11 @@
 ﻿using Boooks.Net.Endpoint.Controllers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Project.Application.Service.Defination;
 using Project.Core;
 using Project.Object;
-using Project.Object.Entities;
 using Project.Object.Requests;
 using Project.Object.Responses;
-using System.Threading.Tasks;
 
 namespace Project.Endpoint.Controllers
 {
@@ -16,86 +15,54 @@ namespace Project.Endpoint.Controllers
     {
         private readonly IProductService _productService;
         private readonly IApplicationContext _applicationContext;
-        private readonly ILogger<ProductController> _logger;
 
-        public ProductController(IProductService productService, IApplicationContext applicationContext, ILogger<ProductController> logger)
+        public ProductController(IProductService productService, IApplicationContext applicationContext)
         {
             _productService = productService;
             _applicationContext = applicationContext;
-            _logger = logger;
         }
 
-        [HttpPost]
-        [Route("add-product")]
+        [Authorize(Roles = "Admin")]
+        [HttpPost("add-product")]
         public async Task<ActionResult> AddProduct(ProductRequestModel product)
         {
-            try
-            {
-                var response = new ResponseModel<ProductResponseModel>();
-                var requestHeaders = await GetRequestHeadersAsync();
-
-                _applicationContext.Log.LogInformation($"Going to execute _productService.AddProduct({product.Name})");
-                var productResponse = await _productService.AddProduct(product);
-                _applicationContext.Log.LogInformation($"Completed _productService.AddProduct({product.Name})");
-
-                if (productResponse.Id != null)
-                {
-                    response.IsSuccess = true;
-                    response.Data = productResponse;
-                    return Ok(response);
-                }
-                else
-                {
-                    response.IsSuccess = false;
-                    response.ErrorMessage = "Product creation failed.";
-                    return BadRequest(response);
-                }
-            }
-            catch (Exception ex)
-            {
-                _applicationContext.Log.LogError(ex, "AddProducts - Exception");
-                return StatusCode(500, new ResponseModel<ProductResponseModel>
-                {
-                    IsSuccess = false,
-                    ErrorMessage = "An unexpected error occurred."
-                });
-            }
+            _applicationContext.Log.LogInformation($"AddProduct: {product.Name}");
+            var result = await _productService.AddProduct(product);
+            return Ok(new ResponseModel<ProductResponseModel> { IsSuccess = true, Data = result });
         }
 
-        [HttpPost("get-product-list")]
-        public async Task<ActionResult<GetProductListResponse>> GetProductList(GetProductListRequest request)
+        [HttpGet("get-product-list")]
+        public async Task<ActionResult> GetProductList([FromQuery] GetProductListRequest request)
         {
-            try
-            {
-                var response = new ResponseModel<GetProductListResponse>();
-                var requestHeaders = await GetRequestHeadersAsync();
+            _applicationContext.Log.LogInformation("GetProductList");
+            var result = await _productService.GetProductList(request);
+            return Ok(new ResponseModel<GetProductListResponse> { IsSuccess = true, Data = result });
+        }
 
-                _applicationContext.Log.LogInformation($"Going to execute _productService.GetProductList");
-                var productList = await _productService.GetProductList(request);
-                _applicationContext.Log.LogInformation($"Completed _productService.GetProductList");
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult> GetProductById(int id)
+        {
+            _applicationContext.Log.LogInformation($"GetProductById: {id}");
+            var result = await _productService.GetProductById(id);
+            return Ok(new ResponseModel<ProductResponseModel> { IsSuccess = true, Data = result });
+        }
 
-                if (productList != null)
-                {
-                    response.IsSuccess = true;
-                    response.Data = productList;
-                    return Ok(response);
-                }
-                else
-                {
-                    response.IsSuccess = false;
-                    response.ErrorMessage = "Get Products failed.";
-                    return BadRequest(response);
-                }
-            }
-            catch (Exception ex)
-            {
-                _applicationContext.Log.LogError(ex, "GetProductList - Exception");
-                return StatusCode(500, new ResponseModel<GetProductListRequest>
-                {
-                    IsSuccess = false,
-                    ErrorMessage = "An unexpected error occurred."
-                });
-            }
+        [Authorize(Roles = "Admin")]
+        [HttpPut("{id:int}")]
+        public async Task<ActionResult> UpdateProduct(int id, ProductRequestModel product)
+        {
+            _applicationContext.Log.LogInformation($"UpdateProduct: {id}");
+            var result = await _productService.UpdateProduct(id, product);
+            return Ok(new ResponseModel<ProductResponseModel> { IsSuccess = true, Data = result });
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpDelete("{id:int}")]
+        public async Task<ActionResult> DeleteProduct(int id)
+        {
+            _applicationContext.Log.LogInformation($"DeleteProduct: {id}");
+            await _productService.DeleteProduct(id);
+            return Ok(new ResponseModel<object> { IsSuccess = true });
         }
     }
 }
