@@ -45,7 +45,7 @@ class ProfilePage {
                                 </div>
                                 <div class="col-6">
                                     <div class="stat-card">
-                                        <span class="stat-value" style="color:var(--success)">$${(profile.totalSpent ?? 0).toFixed(2)}</span>
+                                        <span class="stat-value" style="color:var(--success)">৳${(profile.totalSpent ?? 0).toFixed(2)}</span>
                                         <span class="stat-label">Total Spent</span>
                                     </div>
                                 </div>

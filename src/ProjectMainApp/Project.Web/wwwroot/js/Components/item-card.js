@@ -84,9 +84,9 @@ class ItemCard {
                     </a>
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <div>
-                            <span class="h5 mb-0 product-price">$${discountedPrice.toFixed(2)}</span>
+                            <span class="h5 mb-0 product-price">৳${discountedPrice.toFixed(2)}</span>
                             ${isDiscountActive ? 
-                                `<span class="product-original-price text-decoration-line-through me-2">$${originalPrice.toFixed(2)}</span>` : 
+                                `<span class="product-original-price text-decoration-line-through me-2">৳${originalPrice.toFixed(2)}</span>` : 
                                 ''}
                         </div>
                     </div>

@@ -78,8 +78,8 @@ class OrderHistoryPage {
                 <tr>
                     <td>${i.productName}</td>
                     <td>${i.quantity}</td>
-                    <td>$${i.unitPrice.toFixed(2)}</td>
-                    <td>$${(i.unitPrice * i.quantity).toFixed(2)}</td>
+                    <td>৳${i.unitPrice.toFixed(2)}</td>
+                    <td>৳${(i.unitPrice * i.quantity).toFixed(2)}</td>
                 </tr>`).join('');
 
             const card = $(`
@@ -107,7 +107,7 @@ class OrderHistoryPage {
                     </div>
                     <div class="card-footer d-flex justify-content-between text-muted small">
                         <span>Placed: ${new Date(order.createdAt).toLocaleDateString()}</span>
-                        <span class="fw-bold">Order Total: $${order.totalAmount.toFixed(2)}</span>
+                        <span class="fw-bold">Order Total: ৳${order.totalAmount.toFixed(2)}</span>
                     </div>
                 </div>
             `);

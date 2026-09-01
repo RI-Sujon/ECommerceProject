@@ -40,10 +40,10 @@ class ProductDetailPage {
         const displayPrice = isDisc ? product.price * 0.75 : product.price;
 
         const priceHtml = isDisc
-            ? `<span class="product-detail-price text-danger">$${displayPrice.toFixed(2)}</span>
-               <span class="text-muted text-decoration-line-through ms-2" style="font-size:1.1rem">$${product.price.toFixed(2)}</span>
+            ? `<span class="product-detail-price text-danger">৳${displayPrice.toFixed(2)}</span>
+               <span class="text-muted text-decoration-line-through ms-2" style="font-size:1.1rem">৳${product.price.toFixed(2)}</span>
                <span class="badge badge-discount ms-2"><i class="fas fa-bolt me-1"></i>25% OFF</span>`
-            : `<span class="product-detail-price">$${displayPrice.toFixed(2)}</span>`;
+            : `<span class="product-detail-price">৳${displayPrice.toFixed(2)}</span>`;
 
         const discountLine = (dStart && dEnd) ? `
             <div class="d-flex align-items-center gap-2 mt-2 p-2" style="background:var(--warning-light);border-radius:var(--radius-sm);border-left:3px solid var(--accent)">

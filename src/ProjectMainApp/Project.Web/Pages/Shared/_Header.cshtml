@@ -1,28 +1,47 @@
 ﻿<header class="main-header">
     <div class="container">
         <div class="d-flex justify-content-between align-items-center h-100 px-5">
+            <!-- Brand -->
             <a class="navbar-brand d-flex align-items-center" asp-area="" asp-page="/Product/Index">
                 <img src="~/css/images/Original.png" alt="Logo" class="logo-image">
             </a>
 
-            <div class="d-flex align-items-center gap-3">
-                <!-- Auth nav (rendered by JS after checking JWT) -->
-                <div id="nav-auth" class="d-flex align-items-center gap-3">
-                    <a href="/Auth/Login" id="nav-login" class="btn btn-sm btn-outline-primary d-none">Login</a>
-                    <a href="/Auth/Register" id="nav-register" class="btn btn-sm btn-primary d-none">Register</a>
-                    <span id="nav-user" class="text-muted small d-none"></span>
-                    <a href="/Order" id="nav-orders" class="btn btn-sm btn-outline-secondary d-none">
-                        <i class="fas fa-box me-1"></i>My Orders
+            <!-- Center Nav Links -->
+            <nav class="d-none d-md-flex align-items-center gap-4" id="nav-center-links">
+                <a href="/Product" class="header-nav-link">Products</a>
+                <a href="/About" class="header-nav-link">About</a>
+                <a href="/Contact" class="header-nav-link">Contact</a>
+            </nav>
+
+            <div class="d-flex align-items-center gap-2">
+                <!-- Auth nav -->
+                <div id="nav-auth" class="d-flex align-items-center gap-2">
+                    <a href="/Auth/Login" id="nav-login" class="btn btn-sm btn-outline-primary d-none">
+                        <i class="fas fa-sign-in-alt me-1"></i>Login
                     </a>
-                    <a href="/Profile" id="nav-profile" class="btn btn-sm btn-outline-secondary d-none">
-                        <i class="fas fa-user me-1"></i>Profile
+                    <a href="/Auth/Register" id="nav-register" class="btn btn-sm btn-primary d-none">
+                        <i class="fas fa-user-plus me-1"></i>Register
                     </a>
-                    <a href="/Admin" id="nav-admin" class="btn btn-sm btn-outline-warning d-none">
-                        <i class="fas fa-cog me-1"></i>Admin
-                    </a>
-                    <button id="nav-logout" class="btn btn-sm btn-outline-danger d-none" onclick="Common.logout()">
-                        Logout
-                    </button>
+
+                    <!-- Logged-in user dropdown -->
+                    <div class="dropdown d-none" id="nav-user-dropdown">
+                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle d-flex align-items-center gap-2" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="nav-user-btn">
+                            <span class="user-avatar-sm" id="nav-user-initial"></span>
+                            <span id="nav-user-name" class="d-none d-lg-inline" style="max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" style="min-width:200px;border:1px solid var(--neutral-200);border-radius:var(--radius-md);box-shadow:var(--shadow-lg);padding:0.5rem 0;margin-top:0.5rem">
+                            <li class="px-3 py-2" style="border-bottom:1px solid var(--neutral-200)">
+                                <small class="text-muted d-block" style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.05em">Signed in as</small>
+                                <span class="fw-semibold small" id="nav-dropdown-name"></span>
+                            </li>
+                            <li><a class="dropdown-item small" href="/Profile"><i class="fas fa-user me-2" style="width:16px;color:var(--accent)"></i>My Profile</a></li>
+                            <li id="nav-dropdown-orders" class="d-none"><a class="dropdown-item small" href="/Order"><i class="fas fa-box me-2" style="width:16px;color:var(--accent)"></i>My Orders</a></li>
+                            <li id="nav-dropdown-wishlist" class="d-none"><a class="dropdown-item small" href="/Wishlist"><i class="fas fa-heart me-2" style="width:16px;color:var(--accent)"></i>My Wishlist <span class="badge bg-danger ms-1 wishlist-menu-count" style="font-size:0.6rem"></span></a></li>
+                            <li id="nav-dropdown-admin" class="d-none"><a class="dropdown-item small" href="/Admin"><i class="fas fa-cog me-2" style="width:16px;color:var(--accent)"></i>Admin Panel</a></li>
+                            <li><hr class="dropdown-divider my-1"></li>
+                            <li><a class="dropdown-item small text-danger" href="#" onclick="Common.logout();return false;"><i class="fas fa-sign-out-alt me-2" style="width:16px"></i>Logout</a></li>
+                        </ul>
+                    </div>
                 </div>
 
                 <!-- Dark mode toggle -->
@@ -31,10 +50,11 @@
                     <i id="dark-mode-icon" class="fas fa-moon"></i>
                 </button>
 
+                <!-- Wishlist & Cart icons -->
                 <div id="cart-icon-wrapper" class="cart-icon">
                     <a href="/Wishlist" id="wishlist-icon-btn" class="btn btn-link position-relative d-none" title="My Wishlist" style="text-decoration:none">
                         <i class="fas fa-heart fs-5"></i>
-                        <span class="wishlist-count" style="position:absolute;top:0;right:0;background:var(--danger);color:#fff;border-radius:50%;width:18px;height:18px;font-size:0.65rem;display:flex;align-items:center;justify-content:center;font-weight:700">0</span>
+                        <span class="wishlist-count" style="position:absolute;top:0;right:0;background:var(--danger);color:#fff;border-radius:50%;width:18px;height:18px;font-size:0.65rem;display:none;align-items:center;justify-content:center;font-weight:700">0</span>
                     </a>
                     <div id="cart-icon-btn" class="btn btn-link position-relative" title="Shopping Cart">
                         <i class="fas fa-shopping-cart fs-5"></i>
@@ -66,17 +86,22 @@
         // Auth nav
         if (Common.isLoggedIn()) {
             const info = Common.getUserInfo();
-            document.getElementById('nav-user').textContent = info.fullName || info.username;
-            document.getElementById('nav-user').classList.remove('d-none');
-            document.getElementById('nav-profile').classList.remove('d-none');
-            document.getElementById('nav-logout').classList.remove('d-none');
+            const initial = (info.fullName || info.username || 'U').charAt(0).toUpperCase();
+            const displayName = info.fullName || info.username;
+
+            // Show dropdown
+            document.getElementById('nav-user-dropdown').classList.remove('d-none');
+            document.getElementById('nav-user-initial').textContent = initial;
+            document.getElementById('nav-user-name').textContent = displayName;
+            document.getElementById('nav-dropdown-name').textContent = displayName;
+
             if (info.role === 'Admin') {
-                document.getElementById('nav-admin').classList.remove('d-none');
-                // Admin manages orders via /Admin — hide shopping UI
+                document.getElementById('nav-dropdown-admin').classList.remove('d-none');
                 document.getElementById('cart-icon-wrapper').classList.add('d-none');
             } else {
-                document.getElementById('nav-orders').classList.remove('d-none');
-                // Show wishlist icon for customers
+                document.getElementById('nav-dropdown-orders').classList.remove('d-none');
+                document.getElementById('nav-dropdown-wishlist').classList.remove('d-none');
+                // Show wishlist icon
                 const wlBtn = document.getElementById('wishlist-icon-btn');
                 if (wlBtn) {
                     wlBtn.classList.remove('d-none');
@@ -92,5 +117,13 @@
             document.getElementById('nav-login').classList.remove('d-none');
             document.getElementById('nav-register').classList.remove('d-none');
         }
+
+        // Highlight active nav link
+        const path = window.location.pathname;
+        document.querySelectorAll('.header-nav-link').forEach(link => {
+            if (path.startsWith(link.getAttribute('href'))) {
+                link.classList.add('active');
+            }
+        });
     });
 </script>

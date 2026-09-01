@@ -27,7 +27,7 @@ class AdminPage {
             { icon: 'fa-box',          color: 'primary', value: stats.totalProducts, label: 'Active Products' },
             { icon: 'fa-shopping-bag', color: 'success', value: stats.totalOrders,   label: 'Total Orders'    },
             { icon: 'fa-users',        color: 'info',    value: stats.totalUsers,    label: 'Registered Users'},
-            { icon: 'fa-dollar-sign',  color: 'warning', value: `$${stats.totalRevenue.toFixed(2)}`, label: 'Total Revenue' }
+            { icon: 'fa-dollar-sign',  color: 'warning', value: `৳${stats.totalRevenue.toFixed(2)}`, label: 'Total Revenue' }
         ];
 
         const lowStockHtml = stats.lowStockProducts.length ? `
@@ -44,7 +44,7 @@ class AdminPage {
                             ${stats.lowStockProducts.map(p => `
                                 <tr>
                                     <td class="fw-medium">${p.name}</td>
-                                    <td>$${p.price.toFixed(2)}</td>
+                                    <td>৳${p.price.toFixed(2)}</td>
                                     <td class="text-center"><span class="badge bg-danger">${p.stock}</span></td>
                                 </tr>`).join('')}
                         </tbody>
@@ -85,7 +85,7 @@ class AdminPage {
             <tr>
                 <td class="fw-bold">#${o.id}</td>
                 <td>${o.userEmail ? `<span title="User #${o.userId}">${o.userEmail}</span>` : `#${o.userId}`}</td>
-                <td>$${o.totalAmount.toFixed(2)}</td>
+                <td>৳${o.totalAmount.toFixed(2)}</td>
                 <td><span class="badge bg-${statusColors[o.status] || 'secondary'}">${o.status}</span></td>
                 <td>${new Date(o.createdAt).toLocaleDateString()}</td>
                 <td class="d-flex gap-2 align-items-center">

@@ -308,7 +308,7 @@ $(document).ready(async () => {
                          style="cursor:pointer;border-bottom:1px solid rgba(0,0,0,.05)"
                          data-id="${p.id}" data-name="${p.name.replace(/"/g, '&quot;')}">
                         <span class="fw-semibold small">${p.name}</span>
-                        <span class="text-muted small ms-2">$${p.price.toFixed(2)}</span>
+                        <span class="text-muted small ms-2">৳${p.price.toFixed(2)}</span>
                     </div>`).join('')).show();
             } catch { $acDrop.hide(); }
         }, 300);

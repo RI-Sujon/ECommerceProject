@@ -38,7 +38,7 @@ class WishlistPage {
                             <i class="fas fa-eye me-1"></i>View Details
                         </a>
                         <div class="d-flex justify-content-between align-items-center">
-                            <span class="product-price">$${item.price.toFixed(2)}</span>
+                            <span class="product-price">৳${item.price.toFixed(2)}</span>
                         </div>
                         <p class="text-muted mt-2 mb-0" style="font-size:0.72rem">
                             <i class="fas fa-calendar-alt me-1"></i>Added ${new Date(item.addedAt).toLocaleDateString()}

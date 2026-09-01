@@ -37,16 +37,17 @@ class ConfirmationPage {
                             ${lastOrder ? `
                             <div class="col-6 mb-3">
                                 <p class="text-muted small mb-1" style="text-transform:uppercase;letter-spacing:0.05em;font-weight:600;font-size:0.7rem">Total Amount</p>
-                                <p class="fw-bold mb-0" style="font-family:var(--font-display);font-size:1.2rem;color:var(--primary)">$${lastOrder.totalAmount?.toFixed(2) || '0.00'}</p>
+                                <p class="fw-bold mb-0" style="font-family:var(--font-display);font-size:1.2rem;color:var(--primary)">৳${lastOrder.totalAmount?.toFixed(2) || '0.00'}</p>
                             </div>
                             <div class="col-6 mb-3">
                                 <p class="text-muted small mb-1" style="text-transform:uppercase;letter-spacing:0.05em;font-weight:600;font-size:0.7rem">Payment</p>
-                                <p class="fw-medium mb-0"><i class="fas fa-money-bill-wave me-1" style="color:var(--accent)"></i>Cash on Delivery</p>
+                                <p class="fw-medium mb-0"><i class="fas fa-money-bill-wave me-1" style="color:var(--accent)"></i>${lastOrder.paymentMethod || 'Cash on Delivery'}</p>
                             </div>
                             <div class="col-12">
                                 <hr style="border-color:var(--neutral-200)">
                                 <p class="text-muted small mb-1" style="text-transform:uppercase;letter-spacing:0.05em;font-weight:600;font-size:0.7rem">Shipping To</p>
                                 <p class="mb-0 fw-medium">${lastOrder.shippingName || ''}</p>
+                                ${lastOrder.shippingPhone ? `<p class="text-muted small mb-0"><i class="fas fa-phone me-1"></i>${lastOrder.shippingPhone}</p>` : ''}
                                 <p class="text-muted small mb-0">${lastOrder.shippingAddress || ''}</p>
                                 <p class="text-muted small mb-0">${lastOrder.shippingCity || ''}</p>
                             </div>

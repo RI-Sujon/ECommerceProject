@@ -35,8 +35,8 @@ class OrderDetailPage {
             <tr>
                 <td>${i.productName}</td>
                 <td class="text-center">${i.quantity}</td>
-                <td class="text-end">$${i.unitPrice.toFixed(2)}</td>
-                <td class="text-end fw-bold">$${(i.unitPrice * i.quantity).toFixed(2)}</td>
+                <td class="text-end">৳${i.unitPrice.toFixed(2)}</td>
+                <td class="text-end fw-bold">৳${(i.unitPrice * i.quantity).toFixed(2)}</td>
             </tr>`).join('');
 
         this.container.html(`
@@ -65,7 +65,7 @@ class OrderDetailPage {
                             <tfoot class="table-light">
                                 <tr>
                                     <td colspan="3" class="text-end fw-bold" style="font-family:var(--font-display)">Order Total</td>
-                                    <td class="text-end fw-bold" style="font-family:var(--font-display);font-size:1.1rem;color:var(--primary)">$${order.totalAmount.toFixed(2)}</td>
+                                    <td class="text-end fw-bold" style="font-family:var(--font-display);font-size:1.1rem;color:var(--primary)">৳${order.totalAmount.toFixed(2)}</td>
                                 </tr>
                             </tfoot>
                         </table>

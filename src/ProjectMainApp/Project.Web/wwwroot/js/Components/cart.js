@@ -39,7 +39,7 @@ class Cart {
                 <div class="cart-total">
                     <div class="total-row">
                         <span style="color:var(--neutral-600)">Subtotal</span>
-                        <span class="total-amount">$0.00</span>
+                        <span class="total-amount">৳0.00</span>
                     </div>
                     <button id="checkout-btn" class="btn btn-primary w-100 mt-3" style="display:none;height:44px;font-weight:600">
                         <i class="fas fa-credit-card me-2"></i>Checkout
@@ -166,7 +166,7 @@ class Cart {
                         </div>
                     </div>
                     <div class="cart-item-price">
-                        $${price.toFixed(2)}
+                        ৳${price.toFixed(2)}
                     </div>
                 </div>
             `);
@@ -179,7 +179,7 @@ class Cart {
 
     updateTotal(total) {
         const $totalAmount = this.cartContainer.find('.total-amount');
-        $totalAmount.text(`$${total.toFixed(2)}`);
+        $totalAmount.text(`৳${total.toFixed(2)}`);
         const $btn = this.cartContainer.find('#checkout-btn');
         if (this.items.length > 0 && Common.isLoggedIn()) {
             $btn.show();

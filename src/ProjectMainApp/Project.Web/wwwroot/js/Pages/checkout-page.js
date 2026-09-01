@@ -45,9 +45,9 @@ class CheckoutPage {
                     </div>
                     <div class="flex-grow-1">
                         <h6 class="mb-0" style="font-family:var(--font-display);color:var(--primary);font-weight:600;font-size:0.9rem">${item.productName}</h6>
-                        <small class="text-muted">Qty: ${item.quantity} &times; $${price.toFixed(2)}</small>
+                        <small class="text-muted">Qty: ${item.quantity} &times; ৳${price.toFixed(2)}</small>
                     </div>
-                    <div class="fw-bold" style="color:var(--primary);font-size:0.95rem">$${lineTotal.toFixed(2)}</div>
+                    <div class="fw-bold" style="color:var(--primary);font-size:0.95rem">৳${lineTotal.toFixed(2)}</div>
                 </div>`;
         }).join('');
 
@@ -68,43 +68,60 @@ class CheckoutPage {
                                 <div class="row g-3">
                                     <div class="col-md-6">
                                         <label class="form-label" style="font-weight:600;text-transform:uppercase;font-size:0.72rem;letter-spacing:0.05em">First Name <span class="text-danger">*</span></label>
-                                        <input type="text" id="shipFirstName" class="form-control" placeholder="John" required>
+                                        <input type="text" id="shipFirstName" class="form-control" placeholder="Rahim" required>
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label" style="font-weight:600;text-transform:uppercase;font-size:0.72rem;letter-spacing:0.05em">Last Name <span class="text-danger">*</span></label>
-                                        <input type="text" id="shipLastName" class="form-control" placeholder="Doe" required>
+                                        <input type="text" id="shipLastName" class="form-control" placeholder="Uddin" required>
                                     </div>
                                     <div class="col-12">
                                         <label class="form-label" style="font-weight:600;text-transform:uppercase;font-size:0.72rem;letter-spacing:0.05em">Email <span class="text-danger">*</span></label>
                                         <input type="email" id="shipEmail" class="form-control" placeholder="you@example.com" required>
                                     </div>
                                     <div class="col-12">
-                                        <label class="form-label" style="font-weight:600;text-transform:uppercase;font-size:0.72rem;letter-spacing:0.05em">Phone</label>
-                                        <input type="tel" id="shipPhone" class="form-control" placeholder="+1 (555) 000-0000">
+                                        <label class="form-label" style="font-weight:600;text-transform:uppercase;font-size:0.72rem;letter-spacing:0.05em">Phone <span class="text-danger">*</span></label>
+                                        <div class="input-group">
+                                            <span class="input-group-text" style="border-color:var(--neutral-200);background:var(--neutral-50);font-size:0.85rem;font-weight:600">+880</span>
+                                            <input type="tel" id="shipPhone" class="form-control" placeholder="1712-345678" required maxlength="15">
+                                        </div>
+                                        <small class="text-muted" style="font-size:0.72rem">e.g. 01712-345678 (11 digits)</small>
                                     </div>
                                     <div class="col-12">
                                         <label class="form-label" style="font-weight:600;text-transform:uppercase;font-size:0.72rem;letter-spacing:0.05em">Street Address <span class="text-danger">*</span></label>
-                                        <input type="text" id="shipAddress" class="form-control" placeholder="123 Main Street" required>
+                                        <input type="text" id="shipAddress" class="form-control" placeholder="House 12, Road 5, Dhanmondi" required>
                                     </div>
                                     <div class="col-12">
-                                        <label class="form-label" style="font-weight:600;text-transform:uppercase;font-size:0.72rem;letter-spacing:0.05em">Apartment, Suite, etc.</label>
-                                        <input type="text" id="shipAddress2" class="form-control" placeholder="Apt 4B">
+                                        <label class="form-label" style="font-weight:600;text-transform:uppercase;font-size:0.72rem;letter-spacing:0.05em">Area / Landmark</label>
+                                        <input type="text" id="shipAddress2" class="form-control" placeholder="Near Dhanmondi Lake, Dhaka">
                                     </div>
                                     <div class="col-md-5">
                                         <label class="form-label" style="font-weight:600;text-transform:uppercase;font-size:0.72rem;letter-spacing:0.05em">City <span class="text-danger">*</span></label>
-                                        <input type="text" id="shipCity" class="form-control" placeholder="New York" required>
+                                        <select id="shipCity" class="form-select" required>
+                                            <option value="">Select City</option>
+                                            <option value="Dhaka">Dhaka</option>
+                                            <option value="Chittagong">Chittagong</option>
+                                            <option value="Rajshahi">Rajshahi</option>
+                                            <option value="Khulna">Khulna</option>
+                                            <option value="Sylhet">Sylhet</option>
+                                            <option value="Rangpur">Rangpur</option>
+                                            <option value="Barishal">Barishal</option>
+                                            <option value="Mymensingh">Mymensingh</option>
+                                            <option value="Comilla">Comilla</option>
+                                            <option value="Gazipur">Gazipur</option>
+                                            <option value="Narayanganj">Narayanganj</option>
+                                        </select>
                                     </div>
                                     <div class="col-md-4">
-                                        <label class="form-label" style="font-weight:600;text-transform:uppercase;font-size:0.72rem;letter-spacing:0.05em">State / Province</label>
-                                        <input type="text" id="shipState" class="form-control" placeholder="NY">
+                                        <label class="form-label" style="font-weight:600;text-transform:uppercase;font-size:0.72rem;letter-spacing:0.05em">District</label>
+                                        <input type="text" id="shipState" class="form-control" placeholder="Dhaka">
                                     </div>
                                     <div class="col-md-3">
-                                        <label class="form-label" style="font-weight:600;text-transform:uppercase;font-size:0.72rem;letter-spacing:0.05em">Zip Code <span class="text-danger">*</span></label>
-                                        <input type="text" id="shipZip" class="form-control" placeholder="10001" required>
+                                        <label class="form-label" style="font-weight:600;text-transform:uppercase;font-size:0.72rem;letter-spacing:0.05em">Post Code</label>
+                                        <input type="text" id="shipZip" class="form-control" placeholder="1205" maxlength="4">
                                     </div>
                                     <div class="col-12">
                                         <label class="form-label" style="font-weight:600;text-transform:uppercase;font-size:0.72rem;letter-spacing:0.05em">Order Notes</label>
-                                        <textarea id="shipNotes" class="form-control" rows="2" placeholder="Any special instructions..."></textarea>
+                                        <textarea id="shipNotes" class="form-control" rows="2" placeholder="Any special delivery instructions..."></textarea>
                                     </div>
                                 </div>
                             </form>
@@ -122,12 +139,19 @@ class CheckoutPage {
                                 <label class="form-check-label fw-medium ms-2" for="payCOD">
                                     <i class="fas fa-money-bill-wave me-2" style="color:var(--accent)"></i>Cash on Delivery
                                 </label>
-                                <p class="text-muted small mb-0 ms-4 mt-1">Pay when your order arrives</p>
+                                <p class="text-muted small mb-0 ms-4 mt-1">Pay cash when your order is delivered to your door</p>
+                            </div>
+                            <div class="form-check mb-3 p-3" style="border:1.5px solid var(--neutral-200);border-radius:var(--radius-sm)">
+                                <input class="form-check-input" type="radio" name="paymentMethod" id="payBkash" value="bkash" disabled>
+                                <label class="form-check-label fw-medium ms-2 text-muted" for="payBkash">
+                                    <i class="fas fa-mobile-alt me-2" style="color:#E2136E"></i>bKash / Nagad
+                                    <span class="badge" style="background:var(--neutral-200);color:var(--neutral-500);font-size:0.65rem;margin-left:0.5rem">Coming Soon</span>
+                                </label>
                             </div>
                             <div class="form-check p-3" style="border:1.5px solid var(--neutral-200);border-radius:var(--radius-sm)">
                                 <input class="form-check-input" type="radio" name="paymentMethod" id="payCard" value="card" disabled>
                                 <label class="form-check-label fw-medium ms-2 text-muted" for="payCard">
-                                    <i class="fas fa-credit-card me-2"></i>Credit/Debit Card
+                                    <i class="fas fa-credit-card me-2"></i>Credit / Debit Card
                                     <span class="badge" style="background:var(--neutral-200);color:var(--neutral-500);font-size:0.65rem;margin-left:0.5rem">Coming Soon</span>
                                 </label>
                             </div>
@@ -148,7 +172,7 @@ class CheckoutPage {
                         <div class="card-footer" style="padding:1.25rem 1.5rem">
                             <div class="d-flex justify-content-between mb-2">
                                 <span class="text-muted">Subtotal</span>
-                                <span class="fw-medium">$${subtotal.toFixed(2)}</span>
+                                <span class="fw-medium">৳${subtotal.toFixed(2)}</span>
                             </div>
                             <div class="d-flex justify-content-between mb-2">
                                 <span class="text-muted">Shipping</span>
@@ -157,7 +181,7 @@ class CheckoutPage {
                             <hr style="border-color:var(--neutral-200)">
                             <div class="d-flex justify-content-between">
                                 <span class="fw-bold" style="font-family:var(--font-display);font-size:1.1rem;color:var(--primary)">Total</span>
-                                <span class="fw-bold" style="font-family:var(--font-display);font-size:1.25rem;color:var(--primary)">$${total.toFixed(2)}</span>
+                                <span class="fw-bold" style="font-family:var(--font-display);font-size:1.25rem;color:var(--primary)">৳${total.toFixed(2)}</span>
                             </div>
                             <button id="placeOrderBtn" class="btn btn-primary w-100 mt-3" style="height:48px;font-weight:600;font-size:0.95rem">
                                 <i class="fas fa-check-circle me-2"></i>Place Order
@@ -188,7 +212,7 @@ class CheckoutPage {
 
     async placeOrder(total) {
         // Validate required fields
-        const required = ['shipFirstName', 'shipLastName', 'shipEmail', 'shipAddress', 'shipCity', 'shipZip'];
+        const required = ['shipFirstName', 'shipLastName', 'shipEmail', 'shipPhone', 'shipAddress', 'shipCity'];
         let valid = true;
         required.forEach(id => {
             const $el = $(`#${id}`);
@@ -214,9 +238,11 @@ class CheckoutPage {
             localStorage.setItem('lastOrder', JSON.stringify({
                 orderId: order.id,
                 totalAmount: order.totalAmount,
+                paymentMethod: $('input[name="paymentMethod"]:checked').val() === 'cod' ? 'Cash on Delivery' : 'bKash / Nagad',
                 shippingName: $('#shipFirstName').val() + ' ' + $('#shipLastName').val(),
+                shippingPhone: '+880 ' + ($('#shipPhone').val() || ''),
                 shippingAddress: $('#shipAddress').val() + ($('#shipAddress2').val() ? ', ' + $('#shipAddress2').val() : ''),
-                shippingCity: $('#shipCity').val() + ($('#shipState').val() ? ', ' + $('#shipState').val() : '') + ' ' + $('#shipZip').val()
+                shippingCity: ($('#shipCity').val() || '') + ($('#shipState').val() ? ', ' + $('#shipState').val() : '') + ($('#shipZip').val() ? ' - ' + $('#shipZip').val() : '') + ', Bangladesh'
             }));
             // Redirect to confirmation
             window.location.href = '/Order/Confirmation?id=' + order.id;
